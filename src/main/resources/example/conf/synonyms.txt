@@ -1,0 +1,132 @@
+# Synonyms are expanded index-time and not handled query time.
+# example of one-way-synonyms:
+# spisebord =>  spisebord, bord
+# stuebord => stuebord, bord
+# example og two-way-synonyms
+# ipod, i-pod, i pod
+
+aggregat, agregat
+akvarie, akvarie, akvarium
+alpakka, alpaca
+anneks, anekks
+spa => spa, badestamp
+stamp => stamp, badestamp
+babybjorn, baby bjorn, babybjørn, baby bjørn, babybjörn, baby björn
+babycall, baby call
+bilstol => bilstol, barnesete
+batteri, bateri
+bikbok, bik bok
+bilhenger, biltilhenger, henger, tilhenger
+biljardbord, biljard
+billetter, biletter, billeter
+spisebord =>  spisebord, bord
+stuebord => stuebord, bord
+bunad, bunader
+dachs, dachshund
+dj, discjockey
+dreibenk, dreiebenk
+drivhus, veksthus
+dukke, dokke
+dukkehus, dokkehus
+dukkevogn, dokkevogn
+duplo, dupplo
+dusj => dusj, dusjkabinett
+electrocompaniet, electrokompaniet, elektrokompaniet
+bilfelger => bilfelger, felger
+plasma => plasma, flatskjerm
+flipper, flipperspill
+forrytter, forytter
+frieser, friser
+garasje, garrasje
+garasjeport, garrasjeport, garasjedør
+gitar, gitarr
+golden retriever, golden retriver
+gyngehest, jyngehest, gjyngehest
+gyngestol, jyngestol, gjyngestol
+hagemøbler, havemøbler
+hamster, hammster
+føll => føll, hest
+hingst => hingst, hest
+hoppe => hoppe, hest
+blandingsvalp => blandingsvalp, hund
+hundevalp => hundevalp, hund
+hvalp => hvalp, hund
+valp => valp, hund
+hvalper => hvalper, hunder
+valper => valper, hunder
+hvitevarer, vitevarer
+fritidsbolig => fritidsbolig, hytte
+høytaler, høyttaler, høytalere, høyttalere
+jøtul, hjøtul
+k500i, k500
+k700, k700i
+kajakk, kayak , kayakk
+kattunge => kattunge, katt
+pus => pus, katt
+pusekatt => pusekatt, katt
+kite, kait
+kjøkkeninnredning => kjøkkeninnredning, kjøkken
+armbåndsur => armbåndsur, klokke
+ur => ur, klokke
+komfyr, konfyr
+korg, kurv
+recliner => recliner, lenestol
+ørelappstol => ørelappstol, lenestol
+louis vuitton, vuitton
+mac, macintosh
+mariusgenser => mariusgenser, marius
+mariusmønster => mariusmønster, marius
+mixer, mikser
+nikon, nicon
+oppvaskmaskin, oppvaskemaskin
+p910i, p910
+parkett, parket
+bærbar => bærbar, pc
+datamaskin => datamaskin, pc
+laptop => laptop, pc
+peisovn => peisovn, peis
+flygel => flygel, piano
+playstation , playstaion
+pokemon, pocemon
+projektor, projector, prosjektor
+barnepulk => barnepulk, pulk
+fjellpulken => fjellpulken, pulk
+søskenpulk => søskenpulk, pulk
+skrivepult => skrivepult, pult
+racersykkel, rasersykkel
+s700, s700i
+selbuvotter => selbuvotter, selbu
+selbumønster => selbumønster, selbu
+dobbeltseng => dobbeltseng, seng
+enkeltseng => enkeltseng, seng
+sennen, sennenhund
+servise, service
+sjenk, skjenk
+lcd => lcd, skjerm
+slagverk, trommesett
+slalom, slalåm
+slalomski, slalåmski
+snefreser, snøfreser
+snowboard, snebrett, snøbrett
+hjørnesofa => hjørnesofa, sofa
+sovesofa => sovesofa, sofa
+toseter => toseter, sofa
+treseter => treseter, sofa
+solcellepanel, solcelle panel, solcelle-panel
+tandemsykkel => tandemsykkel, sykkel
+sykkelhenger, sykkeltilhenger
+barnesykler => barnesykler, sykler
+søskenvogn, tvillingvogn
+skiboks => skiboks, takboks
+telemarkski, telemark, telemarksski
+trampoline, trampolin
+fjernsyn => fjernsyn, tv
+valp, hundevalp, hunndehvalp, hvalp
+valper, hundehvalper, hundevalper, hvalper
+videokamera, filmkamera
+vinterhjul, vinterdekk
+voksi, voksipose
+vugge, vogge
+whiteboard, whiteboards
+vw, volkswagen
+wii, nintendo wii

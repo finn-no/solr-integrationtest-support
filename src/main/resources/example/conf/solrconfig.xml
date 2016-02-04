@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+     For more details about configurations options that may appear in this
+     file, see http://wiki.apache.org/solr/SolrConfigXml.
+
+     Specifically, the Solr Config can support XInclude, which may make it easier to manage
+     the configuration.  See https://issues.apache.org/jira/browse/SOLR-1167
+-->
+<config>
+    <abortOnConfigurationError>${solr.abortOnConfigurationError:true}</abortOnConfigurationError>
+    <luceneMatchVersion>LUCENE_50</luceneMatchVersion>
+
+    <dataDir>${solr.data.dir:./data}</dataDir>
+
+    <indexConfig>
+        <useCompoundFile>false</useCompoundFile>
+        <mergeFactor>10</mergeFactor>
+        <ramBufferSizeMB>32</ramBufferSizeMB>
+        <maxFieldLength>10000</maxFieldLength>
+        <writeLockTimeout>1000</writeLockTimeout>
+        <commitLockTimeout>10000</commitLockTimeout>
+        <lockType>native</lockType>
+        <reopenReaders>true</reopenReaders>
+    </indexConfig>
+
+    <jmx/>
+
+    <updateHandler class="solr.DirectUpdateHandler2">
+        <listener event="postOptimize" class="solr.RunExecutableListener" enable="${enable.master:false}">
+            <str name="exe">snapshooter</str>
+            <str name="dir">${solr.solr.home}/bin</str>
+            <arr name="args">
+                <str>-d</str>
+                <str>${solr.data.dir}</str>
+            </arr>
+            <bool name="wait">true</bool>
+        </listener>
+        <softCommit>
+            <maxTime>5000</maxTime>
+        </softCommit>
+        <autoCommit>
+            <maxDocs>10000</maxDocs>
+            <!-- maximum uncommited docs before autocommit triggered -->
+            <maxTime>50000</maxTime>
+            <!-- maximum time (in MS) after adding a doc before an autocommit is triggered -->
+        </autoCommit>
+    </updateHandler>
+
+    <query>
+        <maxBooleanClauses>1024</maxBooleanClauses>
+
+        <filterCache class="solr.FastLRUCache" size="512" initialSize="512" autowarmCount="20"/>
+        <queryResultCache class="solr.LRUCache" size="512" initialSize="512" autowarmCount="10"/>
+        <documentCache class="solr.LRUCache" size="1024" initialSize="1024" autowarmCount="10"/>
+        <enableLazyFieldLoading>true</enableLazyFieldLoading>
+        <queryResultWindowSize>50</queryResultWindowSize>
+        <queryResultMaxDocsCached>200</queryResultMaxDocsCached>
+
+        <listener event="firstSearcher" class="solr.QuerySenderListener">
+            <arr name="queries">
+                <lst>
+                    <str name="q">*</str>
+                    <str name="start">0</str>
+                    <str name="rows">25</str>
+                </lst>
+            </arr>
+        </listener>
+        <useColdSearcher>false</useColdSearcher>
+        <maxWarmingSearchers>2</maxWarmingSearchers>
+    </query>
+
+    <requestDispatcher handleSelect="true">
+        <requestParsers enableRemoteStreaming="true" multipartUploadLimitInKB="2048000"/>
+        <httpCaching lastModifiedFrom="openTime" etagSeed="Solr"/>
+    </requestDispatcher>
+
+    <requestHandler name="standard" class="solr.SearchHandler">
+        <lst name="defaults">
+            <str name="echoParams">all</str>
+            <str name="version">2.2</str>
+            <int name="facet.mincount">1</int>
+            <str name="q">*</str>
+        </lst>
+        <arr name="last-components">
+            <str>spellcheck</str>
+        </arr>
+    </requestHandler>
+
+    <requestHandler name="dismax" class="solr.SearchHandler" default="true">
+        <lst name="defaults">
+            <str name="defType">edismax</str>
+            <str name="echoParams">explicit</str>
+            <float name="tie">0.01</float>
+            <!-- see: http://mail-archives.apache.org/mod_mbox/lucene-solr-user/201303.mbox/%3CA9A7DAF7-7452-42AA-B823-CBFF23DB4313%40rodland.no%3E -->
+            <str name="qf">
+                id^200
+            </str>
+            <str name="pf">
+                title^150 body^80
+            </str>
+            <str name="boost">
+                recip(ms(NOW/HOUR,publisheddate),7.76e-11,1,1)
+            </str>
+            <str name="fl">
+                id,title,body
+            </str>
+            <str name="mm">100%</str>
+            <int name="ps">100</int>
+            <str name="q.alt">*:*</str>
+            <str name="facet">on</str>
+            <!-- example highlighter config, enable per-query with hl=true -->
+            <str name="hl.fl">body</str>
+            <!-- for this field, we want no fragmenting, just highlighting -->
+            <str name="f.name.hl.fragsize">0</str>
+            <!-- instructs Solr to return the field itself if no query terms are
+           found -->
+            <str name="f.name.hl.alternateField">body</str>
+            <str name="f.text.hl.fragmenter">regex</str>
+            <!-- defined below -->
+        </lst>
+    </requestHandler>
+
+    <!-- The spell check component can return a list of alternative spelling suggestions.  -->
+    <searchComponent name="spellcheck" class="solr.SpellCheckComponent">
+
+        <str name="queryAnalyzerFieldType">textSpell</str>
+
+        <lst name="spellchecker">
+            <str name="name">default</str>
+            <str name="field">spell</str>
+            <str name="spellcheckIndexDir">./spellchecker1</str>
+
+        </lst>
+        <lst name="spellchecker">
+            <str name="name">jarowinkler</str>
+            <str name="field">spell</str>
+            <!-- Use a different Distance Measure -->
+            <str name="distanceMeasure">org.apache.lucene.search.spell.JaroWinklerDistance</str>
+            <str name="spellcheckIndexDir">./spellchecker2</str>
+
+        </lst>
+
+        <lst name="spellchecker">
+            <str name="classname">solr.FileBasedSpellChecker</str>
+            <str name="name">file</str>
+            <str name="sourceLocation">spellings.txt</str>
+            <str name="characterEncoding">UTF-8</str>
+            <str name="spellcheckIndexDir">./spellcheckerFile</str>
+        </lst>
+    </searchComponent>
+
+    <!-- a request handler utilizing the spellcheck component -->
+    <requestHandler name="/spellCheckCompRH" class="solr.SearchHandler">
+        <lst name="defaults">
+            <!-- omp = Only More Popular -->
+            <str name="spellcheck.onlyMorePopular">false</str>
+            <!-- exr = Extended Results -->
+            <str name="spellcheck.extendedResults">false</str>
+            <!--  The number of suggestions to return -->
+            <str name="spellcheck.count">1</str>
+        </lst>
+        <arr name="last-components">
+            <str>spellcheck</str>
+        </arr>
+    </requestHandler>
+
+    <requestHandler name="/update" class="solr.UpdateRequestHandler"/>
+
+    <requestHandler name="/update/javabin" class="solr.UpdateRequestHandler"/>
+
+    <requestHandler name="/analysis/document" class="solr.DocumentAnalysisRequestHandler"/>
+
+    <requestHandler name="/analysis/field" class="solr.FieldAnalysisRequestHandler"/>
+
+    <requestHandler name="/admin/" class="org.apache.solr.handler.admin.AdminHandlers"/>
+
+    <requestHandler name="/admin/stats" class="org.apache.solr.handler.admin.SolrInfoMBeanHandler"/>
+
+    <requestHandler name="/admin/ping" class="PingRequestHandler">
+        <lst name="defaults">
+            <str name="qt">standard</str>
+            <str name="q">solrpingquery</str>
+            <str name="echoParams">all</str>
+        </lst>
+    </requestHandler>
+
+    <highlighting>
+        <fragmenter name="gap" class="org.apache.solr.highlight.GapFragmenter" default="true">
+            <lst name="defaults">
+                <int name="hl.fragsize">100</int>
+            </lst>
+        </fragmenter>
+
+        <fragmenter name="regex" class="org.apache.solr.highlight.RegexFragmenter">
+            <lst name="defaults">
+                <int name="hl.fragsize">70</int>
+                <float name="hl.regex.slop">0.5</float>
+                <str name="hl.regex.pattern">[-\w ,/\n\"']{20,200}</str>
+            </lst>
+        </fragmenter>
+
+        <formatter name="html" class="org.apache.solr.highlight.HtmlFormatter" default="true">
+            <lst name="defaults">
+                <str name="hl.simple.pre"><![CDATA[<em>]]></str>
+                <str name="hl.simple.post"><![CDATA[</em>]]></str>
+            </lst>
+        </formatter>
+    </highlighting>
+
+    <requestHandler name="mlt" class="solr.MoreLikeThisHandler">
+        <lst name="defaults">
+            <str name="mlt.fl">heading,productcategory,subcategory,body</str>
+            <str name="mlt.mintf">1</str>
+            <str name="mlt.mindf">2</str>
+            <str name="mlt.boost">true</str>
+        </lst>
+    </requestHandler>
+
+
+    <admin>
+        <defaultQuery></defaultQuery>
+    </admin>
+
+</config>
