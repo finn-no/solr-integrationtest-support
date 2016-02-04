@@ -92,31 +92,13 @@
             <str name="echoParams">explicit</str>
             <float name="tie">0.01</float>
             <!-- see: http://mail-archives.apache.org/mod_mbox/lucene-solr-user/201303.mbox/%3CA9A7DAF7-7452-42AA-B823-CBFF23DB4313%40rodland.no%3E -->
-            <str name="qf">
-                id^200
-            </str>
-            <str name="pf">
-                title^150 body^80
-            </str>
-            <str name="boost">
-                recip(ms(NOW/HOUR,publisheddate),7.76e-11,1,1)
-            </str>
-            <str name="fl">
-                id,title,body
-            </str>
+            <str name="qf">id content compositefield</str>
+            <str name="fl">*</str>
             <str name="mm">100%</str>
             <int name="ps">100</int>
             <str name="q.alt">*:*</str>
             <str name="facet">on</str>
             <!-- example highlighter config, enable per-query with hl=true -->
-            <str name="hl.fl">body</str>
-            <!-- for this field, we want no fragmenting, just highlighting -->
-            <str name="f.name.hl.fragsize">0</str>
-            <!-- instructs Solr to return the field itself if no query terms are
-           found -->
-            <str name="f.name.hl.alternateField">body</str>
-            <str name="f.text.hl.fragmenter">regex</str>
-            <!-- defined below -->
         </lst>
     </requestHandler>
 

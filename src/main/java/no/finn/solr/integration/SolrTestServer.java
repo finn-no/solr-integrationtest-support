@@ -6,7 +6,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -36,18 +38,41 @@ public class SolrTestServer {
     private SolrQuery solrQuery = new SolrQuery();
 
     private void configureSysProperties(String solrCore) {
-        ClassLoader loader = SolrTestServer.class.getClassLoader();
-        URL root = loader.getResource(".");
-
-        String path = root.getPath();
-        String rootDir = path.replaceAll("/test-classes", "");
-        String solrHomeAlternative = rootDir + "solr";
-        String solrDataDir = rootDir + "data";
+        File solrFolder = findSolrFolder();
+        String solrHomeAlternative = solrFolder.getAbsolutePath();
+        String solrDataDir = new File(solrFolder.getParentFile(), "data").getAbsolutePath();
         String solrHome = System.getProperty("solr.solr.home", solrHomeAlternative);
+        System.out.println("Running from: " +solrHome);
         System.setProperty("solr.solr.home", solrHome);
         System.setProperty("solr.data.dir", System.getProperty("solr.data.dir", solrDataDir));
         System.setProperty("solr.core", SolrCoreUtil.getSolrCore(solrHome, solrCore));
         assert SolrCoreUtil.coreExists(solrHome, solrCore);
+    }
+
+    private File findRootOfTests(File folder) {
+        if ("target".equals(folder.getName()) || "build".equals(folder.getName())) {
+            return folder;
+        }
+        return findRootOfTests(folder.getParentFile());
+    }
+
+    private File findSolrXml(File folder) {
+        Optional<File> solrXml = FileUtils.listFiles(folder, new String[]{"xml"}, true)
+                .stream()
+                .filter(x -> x.getName().equals("solr.xml"))
+                .findFirst();
+        assert solrXml.isPresent();
+        return solrXml.get();
+    }
+
+    private File findSolrFolder() {
+        ClassLoader loader = SolrTestServer.class.getClassLoader();
+        URL root = loader.getResource(".");
+        String path = root.getPath();
+        File classRoot = new File(path);
+        File solrXml = findSolrXml(findRootOfTests(classRoot));
+        System.out.println(solrXml);
+        return solrXml.getParentFile();
     }
 
     /**
