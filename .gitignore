@@ -12,4 +12,7 @@ gradle-app.setting
 
 # intellij files
 .idea
+/*.iml
+
+# maven target
 target/
