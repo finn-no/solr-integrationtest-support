@@ -24,7 +24,6 @@ Integration testing with Solr made easy
   <scope>test</scope>
 </dependency>
 ```
-
     * Gradle
 
 ```groovy
