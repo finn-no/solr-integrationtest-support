@@ -1,5 +1,7 @@
 plugins {
     id 'java'
+    id 'maven'
+    id 'maven-publish'
     id 'com.jfrog.bintray' version '1.6'
 }
 
@@ -27,6 +29,45 @@ dependencies {
 
 }
 
+
+publishing {
+    publications {
+        SolrIntegrationTestSupport(MavenPublication) {
+            from components.java
+            groupId 'no.finn.search'
+            artifactId 'solr-integrationtest-support'
+            version "${project.version}"
+        }
+    }
+}
+
+
 bintray {
-    user 
+    user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
+    key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
+    publications = ['SolrIntegrationTestSupport']
+    pkg {
+        repo = 'solr-integrationtest-support'
+        name = 'solr-integrationtest-support'
+        userOrg = user
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/finn-no/solr-integrationtest-support'
+        labels = ['solr', 'integrationtest', 'junit', 'spock']
+        publicDownloadNumbers = true
+        version {
+            name ='1.0'
+            desc = 'Solr Integration test support - Simple testing for solrconfig and schemas'
+        }
+    }
+}
+
+task sourcesJar (type: Jar, dependsOn: classes) {
+    classifier 'sources'
+    from sourceSets.main.allJava
+}
+
+
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.10'
 }

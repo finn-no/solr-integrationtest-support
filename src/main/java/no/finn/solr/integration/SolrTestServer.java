@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -37,7 +38,7 @@ public class SolrTestServer {
     private String uniqueKeyField = "id";
     private SolrQuery solrQuery = new SolrQuery();
 
-    private void configureSysProperties(String solrCore) {
+    private void configureSysProperties() {
         File solrFolder = findSolrFolder();
         String solrHomeAlternative = solrFolder.getAbsolutePath();
         String solrDataDir = new File(solrFolder.getParentFile(), "data").getAbsolutePath();
@@ -45,8 +46,6 @@ public class SolrTestServer {
         System.out.println("Running from: " +solrHome);
         System.setProperty("solr.solr.home", solrHome);
         System.setProperty("solr.data.dir", System.getProperty("solr.data.dir", solrDataDir));
-        System.setProperty("solr.core", SolrCoreUtil.getSolrCore(solrHome, solrCore));
-        assert SolrCoreUtil.coreExists(solrHome, solrCore);
     }
 
     private File findRootOfTests(File folder) {
@@ -76,15 +75,21 @@ public class SolrTestServer {
     }
 
     /**
-     * Wires up a Solr Server configured against a core
-     * @param solrCore Which core to use
+     * Wires up a Solr Server
      */
-    public SolrTestServer(String solrCore) {
-        configureSysProperties(solrCore);
+    public SolrTestServer() {
+        configureSysProperties();
         String solrHome = System.getProperty("solr.solr.home");
         CoreContainer coreContainer = new CoreContainer(solrHome);
         coreContainer.load();
-        client = new EmbeddedSolrServer(coreContainer, solrCore);
+        String coreName = getCore(coreContainer);
+        client = new EmbeddedSolrServer(coreContainer, coreName);
+    }
+
+    private String getCore(CoreContainer coreContainer) {
+        Collection<String> allCoreNames = coreContainer.getAllCoreNames();
+        assert allCoreNames.size() > 0;
+        return allCoreNames.toArray(new String[0])[0];
     }
 
     /**

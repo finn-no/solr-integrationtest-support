@@ -11,9 +11,6 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class SolrExampleTestCase extends SolrTestCase {
-    public SolrExampleTestCase() {
-        super("example");
-    }
 
     @Test
     public void testThatWeCanStartupAnExampleServer() throws Exception {
@@ -41,13 +38,13 @@ public class SolrExampleTestCase extends SolrTestCase {
                 .withField("title", "Planetology");
 
         Long compositeId = solr.addDocument(compositeDoc);
-        solr.withParam("fl", "compositefield");
+        solr.withParam("fl", "compositefield,id");
         QueryResponse response = solr.search("venus");
         assertThat(response.getResults().getNumFound(), is(1L));
         SolrDocument hit = response.getResults().get(0);
         Collection<Object> compositefield = hit.getFieldValues("compositefield");
         assertTrue(compositefield.contains("Venus"));
         assertTrue(compositefield.contains("Planetology"));
-        assertThat(hit.getFieldValue("id"), is(compositeId));
+        assertThat(hit.getFieldValue("id"), is(String.valueOf(compositeId)));
     }
 }
