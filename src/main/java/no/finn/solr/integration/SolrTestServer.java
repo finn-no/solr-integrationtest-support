@@ -210,6 +210,11 @@ public class SolrTestServer {
         return addDocument(docBuilder);
         
     }
+
+    public Long addDocumentWithField(String fieldName, Object content) throws IOException, SolrServerException {
+        SolrInputDocumentBuilder docBuilder = new SolrInputDocumentBuilder(fieldName).with(content);
+        return addDocument(docBuilder);
+    }
    
     public Long[] addDocumentsWith(String... docContent) throws Exception {
         List<Long> docIds = new ArrayList<>();
@@ -218,7 +223,7 @@ public class SolrTestServer {
         }
         return docIds.toArray(new Long[docIds.size()]);
     }
-    
+
     public Long[] addDocumentsWithField(String fieldName, String... docContents) throws IOException, SolrServerException {
         List<Long> docIds = new ArrayList<>();
         for (String docContent : docContents) {
@@ -280,6 +285,13 @@ public class SolrTestServer {
     public QueryResponse search(String searchQuery) throws Exception {
         search = searchQuery;
         withParam("q", StringUtils.defaultIfBlank(searchQuery, ""));
+        search();
+        return response;
+    }
+
+    public QueryResponse search(String field, String value) throws Exception {
+        search = field + ":" +value;
+        withParam("q", StringUtils.defaultIfBlank(field + ":" +value, ""));
         search();
         return response;
     }

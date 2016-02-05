@@ -33,7 +33,7 @@ dependencies {
 
 publishing {
     publications {
-        SolrIntegrationTestSupport(MavenPublication) {
+        maven(MavenPublication) {
             from components.java
             groupId 'no.finn.search'
             artifactId 'solr-integrationtest-support'
@@ -46,7 +46,7 @@ publishing {
 bintray {
     user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
     key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
-    publications = ['SolrIntegrationTestSupport']
+    publications = ['maven']
     pkg {
         repo = 'solr-integrationtest-support'
         name = 'solr-integrationtest-support'
