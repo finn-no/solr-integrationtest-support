@@ -13,8 +13,7 @@ Integration testing with Solr made easy
 
 
 # TL; DR;
-* Include this as a dependency
-    * Maven
+## Maven
 
 ```xml
 <dependency>
@@ -24,7 +23,8 @@ Integration testing with Solr made easy
   <scope>test</scope>
 </dependency>
 ```
-    * Gradle
+
+## Gradle
 
 ```groovy
 testCompile "no.finn.search:solr-integrationtest-support:1.0-SNAPSHOT
