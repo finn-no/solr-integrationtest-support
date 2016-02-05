@@ -12,7 +12,7 @@ Integration testing with Solr made easy
 [license img]:https://img.shields.io/badge/License-Apache%202-blue.svg
 
 
-# TL; DR;
+# How-to
 ## Maven
 
 ```xml
@@ -29,11 +29,15 @@ Integration testing with Solr made easy
 ```groovy
 testCompile "no.finn.search:solr-integrationtest-support:1.0-SNAPSHOT
 ```
-* You'll need to run singlethreaded.
-* Make sure your Solr config is on classpath
+
+## Further steps
+
+* For now, you'll need to run singlethreaded, because the EmbeddedSolrServer locks the indexdirectory
+* We usually put our Solr Configs in src/main/resources or src/test/resources
 * Have your JUnit test extend `SolrTestCase`
 * Test your schema and solrconfig.xml
-* Simple test can look like
+
+## Exampletest
 
 ```java
 
