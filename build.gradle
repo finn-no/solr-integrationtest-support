@@ -16,6 +16,7 @@ targetCompatibility = '1.8'
 
 repositories {
     jcenter()
+    mavenLocal()
 }
 
 group = 'no.finn.search'
@@ -66,6 +67,15 @@ task sourcesJar (type: Jar, dependsOn: classes) {
     from sourceSets.main.allJava
 }
 
+task javadocJar (type: Jar, dependsOn: javadoc) {
+    classifier 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    sourcesJar
+    javadocJar
+}
 
 
 task wrapper(type: Wrapper) {
