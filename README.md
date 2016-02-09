@@ -94,7 +94,7 @@ QueryResponse response = solr.search(String query);
 2.
 ```java
 QueryResponse response = solr.dismaxSearch(String dismaxQuery); // Uses the dismax queryhandler instead of the standard/default handler (qt=dismax)
-``
+```
 ## Asserts / Checks
 
 
