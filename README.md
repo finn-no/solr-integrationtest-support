@@ -39,8 +39,8 @@ testCompile "no.finn.search:solr-integrationtest-support:1.1.0-SNAPSHOT
 
 ## Exampletest
 
-```java
 
+```java
 import no.finn.solr.integration.SolrTestCase;
 
 public class SolrConfigTest extends SolrTestCase {
