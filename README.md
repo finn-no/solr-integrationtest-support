@@ -75,12 +75,14 @@ Long[] docIds = solr.addDocumentsWith(... content);
 ```
 A varargs version of `addDocumentWith`, this adds content to the `defaultContentField`
 Returns an array of the documentIds acquired when adding the content
+
 3.
 ```java
 Long docIds = solr.addDocumentWithField(field, content);
 ```
 Adds a single document to the index with `content` to the field in `field`
 Returns the randomly generated id of the document
+
 4.
 ```java
 Long[] docIds = solr.addDocumentsWithField(field, ... content);
@@ -89,31 +91,50 @@ A varargs version of `addDocumentWithField`. This adds contents to the `field`
 Returns an array of the documentIds acquired when adding the content
 
 ## Searching
+
 1.
 ```java
 QueryResponse response = solr.search(String query);
 ```
+
 2.
 ```java
 QueryResponse response = solr.dismaxSearch(String dismaxQuery);
 ```
 Uses the dismax queryhandler instead of the standard/default handler (qt=dismax).
 This performs a search and updates the response field on the class. Call
-```java
-QueryResponse response = solr.getResponse()
-```
-To get the queryResponse object
 
 3.
 If you've set parameters directly on SolrClient or with `solr.withParam(..)` you can execute a search by calling
 ```java
 QueryResponse response = solr.search();
 ```
-This will then perform a search with the parameters currently set. The response will then be available through calling solr.getResponse();
+This will then perform a search with the parameters currently set.
 
 ## Asserts / Checks
 
+1.
+```java
+solr.performSearchAndAssertOneHit(String search);
+```
+Calls search, and then verifies that the result has exactly one hit
 
+2.
+```java
+solr.performSearchAndAssertHits(String search, Long... ids);
+```
+Calls search, and then verifies that the hits returned have exactly the ids passed in. Works well with the ids returned from the
+`solr.addDocument_` methods
+3.
+```java
+solr.performSearchAndAssertNoHits(String search);
+```
+Makes sure that the index does not contain anything that matches the passed in search
+4.
+```java
+solr.search(field, query);
+```
+Offers a simple way to run a query against a specific field
 
 
 [Build Status]:https://travis-ci.org/finn-no/solr-integrationtest-support
