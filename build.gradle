@@ -50,14 +50,15 @@ bintray {
     pkg {
         repo = 'search'
         name = 'solr-integrationtest-support'
-        userOrg = user
+        userOrg = "finn_no"
         licenses = ['Apache-2.0']
         vcsUrl = 'https://github.com/finn-no/solr-integrationtest-support'
         labels = ['solr', 'integrationtest', 'junit', 'spock']
         publicDownloadNumbers = true
         version {
-            name ='1.0'
+            name = "${project.version}"
             desc = 'Solr Integration test support - Simple testing for solrconfig and schemas'
+            released = new Date()
         }
     }
 }
