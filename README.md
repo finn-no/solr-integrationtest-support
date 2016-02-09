@@ -9,7 +9,6 @@ Integration testing with Solr made easy
 # Versioning
 * http://semver.org
 
-
 # Contributing?
 See [Contributing](CONTRIBUTING.md)
 
@@ -138,6 +137,10 @@ Calls search, and then verifies that the hits returned have exactly the ids pass
 solr.performSearchAndAssertNoHits(String search);
 ```
 Makes sure that the index does not contain anything that matches the passed in search
+
+
+# [Release procedure](RELEASING.md)
+
 
 [Build Status]:https://travis-ci.org/finn-no/solr-integrationtest-support
 [Build Status img]:https://travis-ci.org/finn-no/solr-integrationtest-support.svg?branch=master
