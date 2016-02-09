@@ -95,12 +95,21 @@ QueryResponse response = solr.search(String query);
 ```
 2.
 ```java
-solr.dismaxSearch(String dismaxQuery);
+QueryResponse response = solr.dismaxSearch(String dismaxQuery);
 ```
 Uses the dismax queryhandler instead of the standard/default handler (qt=dismax).
-This updates the solr.getC
-3.
+This performs a search and updates the response field on the class. Call
 ```java
+QueryResponse response = solr.getResponse()
+```
+To get the queryResponse object
+
+3.
+If you've set parameters directly on SolrClient or with `solr.withParam(..)` you can execute a search by calling
+```java
+QueryResponse response = solr.search();
+```
+This will then perform a search with the parameters currently set. The response will then be available through calling solr.getResponse();
 
 ## Asserts / Checks
 

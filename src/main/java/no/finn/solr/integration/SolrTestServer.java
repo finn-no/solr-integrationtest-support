@@ -422,12 +422,14 @@ public class SolrTestServer {
      *
      * @throws IOException         if there is a communication error with the server
      * @throws SolrServerException if there is an error on the server
+     * @return The Solr QueryResponse
      */
-    public void search() throws IOException, SolrServerException {
+    public QueryResponse search() throws IOException, SolrServerException {
         if (StringUtils.isEmpty(solrQuery.get("q"))) {
             withParam("hl.q", "*:*");
         }
         response = client.query(solrQuery);
+        return response;
     }
 
     /**
@@ -436,10 +438,11 @@ public class SolrTestServer {
      * @param query search to perform
      * @throws IOException         if there is a communication error with the server
      * @throws SolrServerException if there is an error on the server
+     * @return The Solr QueryResponse
      */
-    public void dismaxSearch(String query) throws IOException, SolrServerException {
+    public QueryResponse dismaxSearch(String query) throws IOException, SolrServerException {
         withParam("qt", "dismax");
-        search(query);
+        return search(query);
     }
 
     //
