@@ -12,8 +12,7 @@ Read https://guides.github.com/activities/contributing-to-open-source/
 3. See an issue you'd be able to fix?
     1. Great!
     2. Post a quick comment in the issue saying that you'd like to take a look, so we avoid duplicate effort.
-    3.
-4. Fixes in the form of PRs are the best.
+    3. If code related, please follow the PR guide in the github guide linked at the top
 
 # Pull-requests
 1. Pull requests are happily accepted

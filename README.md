@@ -6,13 +6,9 @@
 
 Integration testing with Solr made easy
 
+# Versioning
+* http://semver.org
 
-[Build Status]:https://travis-ci.org/finn-no/solr-integrationtest-support
-[Build Status img]:https://travis-ci.org/finn-no/solr-integrationtest-support.svg?branch=master
-[license]:LICENSE
-[license img]:https://img.shields.io/badge/License-Apache%202-blue.svg
-[Maven Central img]:https://maven-badges.herokuapp.com/maven-central/no.finn.search/solr-integrationtest-support/badge.svg
-[Maven Central]:https://maven-badges.herokuapp.com/maven-central/cz.jirutka.rsql/rsql-parser
 
 # Contributing?
 See http://github.com/finn-no/solr-integrationtest-support/blog/master/CONTRIBUTING.md
@@ -60,6 +56,8 @@ public class SolrConfigTest extends SolrTestCase {
 
 # How to Use
 
+Our goal is that the javadocs available here: https://finn-no.github.io/solr-integrationtest-support/development/javadocs
+
 ## Adding documents
 1.
 ```java
@@ -93,5 +91,20 @@ Returns an array of the documentIds acquired when adding the content
 ```java
 QueryResponse response = solr.search(String query);
 ```
+2.
+```java
+QueryResponse response = solr.dismaxSearch(String dismaxQuery); // Uses the dismax queryhandler instead of the standard/default handler (qt=dismax)
+``
 ## Asserts / Checks
+
+
+
+
+[Build Status]:https://travis-ci.org/finn-no/solr-integrationtest-support
+[Build Status img]:https://travis-ci.org/finn-no/solr-integrationtest-support.svg?branch=master
+[license]:LICENSE
+[license img]:https://img.shields.io/badge/License-Apache%202-blue.svg
+[Maven Central img]:https://maven-badges.herokuapp.com/maven-central/no.finn.search/solr-integrationtest-support/badge.svg
+[Maven Central]:https://maven-badges.herokuapp.com/maven-central/no.finn.search/solr-integreationtest-support
+
 
