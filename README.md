@@ -136,6 +136,22 @@ Calls search, and then verifies that the hits returned have exactly the ids pass
 ```java
 solr.performSearchAndAssertNoHits(String search);
 ```
+
+Typically you'd want to confirm that a certain word does not yield results
+```java
+
+import no.finn.solr.integration.SolrTestCase;
+
+public class NonExistantDocumentTest extends SolrTestCase {
+    @Test
+    public void documentDoesNotExist() throws Exception {
+      Long docId = solr.addDocumentWith("doc");
+      solr.performSearchAndAssertNoHits("doctor");
+    }
+}
+```
+
+
 Makes sure that the index does not contain anything that matches the passed in search
 
 
