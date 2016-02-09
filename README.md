@@ -1,7 +1,7 @@
 [![][Build Status img]][Build Status]
 [![][license img]][license]
-[![][Maven Central img][Maven Central]
-
+[![][Maven Central img]][Maven Central]
+[![][Bintray img]][Bintray Latest]
 # solr-integrationtest-support
 
 Integration testing with Solr made easy
@@ -148,5 +148,7 @@ Makes sure that the index does not contain anything that matches the passed in s
 [license img]:https://img.shields.io/badge/License-Apache%202-blue.svg
 [Maven Central img]:https://maven-badges.herokuapp.com/maven-central/no.finn.search/solr-integrationtest-support/badge.svg
 [Maven Central]:https://maven-badges.herokuapp.com/maven-central/no.finn.search/solr-integreationtest-support
+[Bintray img]:https://api.bintray.com/packages/finn-no/search/solr-integrationtest-support/images/download.svg
+[Bintray Latest]:https://bintray.com/finn-no/search/solr-integrationtest-support/_latestVersion
 
 
