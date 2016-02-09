@@ -32,10 +32,16 @@ public class SolrExampleTestCase extends SolrTestCase {
     }
 
     @Test
+    public void example_where_no_document_matches() throws Exception {
+        solr.addDocumentsWith("Hello", "Goodbye", "Github", "Facebook", "FINN");
+        solr.performSearchAndAssertNoHits("twitter");
+    }
+
+    @Test
     public void custom_query_parameters() throws Exception {
         SolrInputDocumentBuilder compositeDoc = new SolrInputDocumentBuilder()
-                .withField("content", "Venus")
-                .withField("title", "Planetology");
+            .withField("content", "Venus")
+            .withField("title", "Planetology");
 
         Long compositeId = solr.addDocument(compositeDoc);
         solr.withParam("fl", "compositefield,id");
