@@ -17,7 +17,7 @@ if [ "$invokeJavadoc" == true ]; then
   ./gradlew javadoc -q -Dorg.gradle.configureondemand=true -Dorg.gradle.workers.max=8 --parallel
 
   echo -e "Copying the generated docs over...\n"
-  cp -R build/javadoc $HOME/javadoc-latest
+  cp -R build/docs/javadoc $HOME/javadoc-latest
 
 fi
 

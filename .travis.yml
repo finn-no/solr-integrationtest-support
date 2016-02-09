@@ -5,7 +5,7 @@ cache:
     - "$HOME/.gradle/caches/"
     - "$HOME/.gradle/wrapper/"
 
-script:
+after_script:
   - bash ./travis/push-javadoc-to-gh-pages.sh true
 
 jdk:
