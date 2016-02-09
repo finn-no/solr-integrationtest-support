@@ -5,7 +5,8 @@ cache:
     - "$HOME/.gradle/caches/"
     - "$HOME/.gradle/wrapper/"
 
-after_success: ./travis/push-javadoc-to-gh-pages.sh
+script:
+  - bash ./travis/push-javadoc-to-gh-pages.sh true
 
 jdk:
   - oraclejdk8

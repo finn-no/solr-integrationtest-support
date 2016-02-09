@@ -1,19 +1,11 @@
 #!/bin/bash
-invokeJavadoc=false
+invokeJavadoc=$1
 invokeDoc=false
 branchVersion="development"
 
 # Only invoke the javadoc deployment process
 # for the first job in the build matrix, so as
 # to avoid multiple deployments.
-
-if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_BRANCH" == "master" ]; then
-  case "${TRAVIS_JOB_NUMBER}" in
-       *\.1)
-        echo -e "Invoking auto-doc deployment for Travis job ${TRAVIS_JOB_NUMBER}"
-        invokeJavadoc=true;
-  esac
-fi
 
 echo -e "Staring with project Javadocs...\n"
 
