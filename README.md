@@ -13,21 +13,48 @@ Integration testing with Solr made easy
 See [Contributing](CONTRIBUTING.md)
 
 # How-to
+
 ## Maven
 
+### Repository
+
+```xml
+<repositories>
+   ...
+    <repository>
+        <snapshots>
+            <enabled>false</enabled>
+        </snapshots>
+        <id>bintray-finn-no-search</id>
+        <name>bintray</name>
+        <url>http://dl.bintray.com/finn-no/search</url>
+    </repository>
+    ...
+</repositories>
+```
+### Artifact
 ```xml
 <dependency>
   <groupId>no.finn.search</groupId>
   <artifactId>solr-integrationtest-support</artifactId>
-  <version>1.1.0-SNAPSHOT</version>
+  <version>1.0.0</version>
   <scope>test</scope>
 </dependency>
 ```
 
 ## Gradle
 
+### Repository
 ```groovy
-testCompile "no.finn.search:solr-integrationtest-support:1.1.0-SNAPSHOT
+repositories {
+    maven {
+        url  "http://dl.bintray.com/finn-no/search"
+    }
+}
+```
+### Artifact
+```groovy
+testCompile "no.finn.search:solr-integrationtest-support:1.0.0
 ```
 
 ## Further steps
