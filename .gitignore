@@ -12,7 +12,16 @@ gradle-app.setting
 
 # intellij files
 .idea
-/*.iml
+*.iml
+*.ipr
+*.iws
 
 # maven target
 target/
+
+# Eclipse project
+.project
+.classpath
+
+# Netbeans
+nbproject
