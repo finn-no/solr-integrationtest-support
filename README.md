@@ -27,7 +27,7 @@ See [Contributing](CONTRIBUTING.md)
 ## Gradle
 
 ```groovy
-testCompile "no.finn.search:solr-integrationtest-support:1.0-SNAPSHOT
+testCompile "no.finn.search:solr-integrationtest-support:1.1.0-SNAPSHOT
 ```
 
 ## Further steps
