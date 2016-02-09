@@ -53,7 +53,7 @@ public class SolrConfigTest extends SolrTestCase {
 
 ```
 
-For other simple examples - see [ExampleTest](src/test/java/no/finn/solr/integration/SolrExampleTestCase.java)
+For other examples - see the provided [SolrExampleTestCase](src/test/java/no/finn/solr/integration/SolrExampleTestCase.java)
 
 # How to Use
 
