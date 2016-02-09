@@ -53,6 +53,8 @@ public class SolrConfigTest extends SolrTestCase {
 
 ```
 
+For other simple examples - see [ExampleTest](src/test/java/no/finn/solr/integration/SolrExampleTestCase.java)
+
 # How to Use
 
 Our goal is that the [Javadocs](https://finn-no.github.io/solr-integrationtest-support/development/javadocs) should be all you need.
