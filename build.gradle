@@ -33,6 +33,8 @@ publishing {
     publications {
         maven(MavenPublication) {
             from components.java
+            artifact sourcesJar
+            artifact javadocJar
             groupId 'no.finn.search'
             artifactId 'solr-integrationtest-support'
             version "${project.version}"
