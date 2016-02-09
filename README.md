@@ -56,7 +56,9 @@ public class SolrConfigTest extends SolrTestCase {
 
 # How to Use
 
-Our goal is that the javadocs available here: https://finn-no.github.io/solr-integrationtest-support/development/javadocs
+Our goal is that the [Javadocs](https://finn-no.github.io/solr-integrationtest-support/development/javadocs) should be all you need.
+
+But a quickstart is available below:
 
 ## Adding documents
 1.
@@ -93,8 +95,13 @@ QueryResponse response = solr.search(String query);
 ```
 2.
 ```java
-QueryResponse response = solr.dismaxSearch(String dismaxQuery); // Uses the dismax queryhandler instead of the standard/default handler (qt=dismax)
+solr.dismaxSearch(String dismaxQuery);
 ```
+Uses the dismax queryhandler instead of the standard/default handler (qt=dismax).
+This updates the solr.getC
+3.
+```java
+
 ## Asserts / Checks
 
 

@@ -607,4 +607,12 @@ public class SolrTestServer {
         return this.client;
     }
 
+    /**
+     * Convenience method to process QueryResponse from server manually rather than using the helper methods
+     * @return The current response (if any)
+     */
+    public QueryResponse getResponse() {
+        return this.response;
+    }
+
 }
