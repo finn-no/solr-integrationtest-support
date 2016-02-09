@@ -3,11 +3,12 @@ plugins {
     id 'maven'
     id 'maven-publish'
     id 'com.jfrog.bintray' version '1.6'
+    id 'net.researchgate.release' version '2.3.4'
+
 }
 
-apply plugin: 'java'
-
 ext.versions = [
+  junit: '4.12',
   solr: '5.4.1'
 ]
 
@@ -18,9 +19,6 @@ repositories {
     jcenter()
     mavenLocal()
 }
-
-group = 'no.finn.search'
-version = '1.0-SNAPSHOT'
 
 
 dependencies {
@@ -48,7 +46,7 @@ bintray {
     key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
     publications = ['maven']
     pkg {
-        repo = 'solr-integrationtest-support'
+        repo = 'search'
         name = 'solr-integrationtest-support'
         userOrg = user
         licenses = ['Apache-2.0']

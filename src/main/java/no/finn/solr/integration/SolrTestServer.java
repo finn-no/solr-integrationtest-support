@@ -31,7 +31,7 @@ import static org.junit.Assert.assertTrue;
 
 public class SolrTestServer {
     private SolrClient client;
-    private String defaultContentField = "content";
+    private String defaultContentField = "body";
     private String groupField = null;
     private String search;
     private QueryResponse response;
