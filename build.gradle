@@ -59,7 +59,7 @@ bintray {
     pkg {
         repo = 'search'
         name = 'solr-integrationtest-support'
-        userOrg = "finn_no"
+        userOrg = "finn-no"
         licenses = ['Apache-2.0']
         vcsUrl = 'https://github.com/finn-no/solr-integrationtest-support'
         labels = ['solr', 'integrationtest', 'junit', 'spock']
