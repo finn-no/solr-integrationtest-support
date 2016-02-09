@@ -11,7 +11,7 @@ Integration testing with Solr made easy
 
 
 # Contributing?
-See http://github.com/finn-no/solr-integrationtest-support/blog/master/CONTRIBUTING.md
+See [Contributing](CONTRIBUTING.md)
 
 # How-to
 ## Maven
