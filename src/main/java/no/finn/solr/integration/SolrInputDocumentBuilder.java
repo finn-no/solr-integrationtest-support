@@ -18,8 +18,16 @@ public class SolrInputDocumentBuilder {
         setRandomId();
     }
 
+    /**
+     *
+     * @return the doc built so far
+     */
     public SolrInputDocument getDoc() { return doc; }
 
+    /**
+     *
+     * @return index id of the document
+     */
     public Long getDocId() { return docId; }
 
 
@@ -32,7 +40,7 @@ public class SolrInputDocumentBuilder {
     /**
      * Return a document builder with custom id
      * @param id id of the document
-     * @return
+     * @return this for further chaining
      */
     public SolrInputDocumentBuilder withId(Long id) {
         this.docId = id;
@@ -42,15 +50,20 @@ public class SolrInputDocumentBuilder {
 
 
     /**
-     * Adds a value to the default field of the builder
+     * Adds a String to the default field of the builder
      * @param value value of field
-     * @return
+     * @return this for further chaining
      */
     public SolrInputDocumentBuilder with(String value) {
         doc.addField(defaultField, value);
         return this;
     }
 
+    /**
+     * Adds a value to the default field of the builder
+     * @param value value of the field
+     * @return this for further chaining
+     */
     public SolrInputDocumentBuilder with(Object value) {
         doc.addField(defaultField, value);
         return this;

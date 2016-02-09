@@ -53,9 +53,27 @@ public class SolrConfigTest extends SolrTestCase {
 
 ```
 
-# What does it do?
+# How to Use
 
-* Finds `solr.xml` in classpath of the build
-* Finds first core available.
-* Makes an EmbeddedSolrServer available in the field called `solr` configured against the first core listed
-* For every test, deletes all documents
+## Adding documents
+1.
+```java
+Long docId = solr.addDocumentWith(content)
+```
+Adds a single document to the index with `content` to what is set as `defaultContentField`. 
+By default this is the `body` field.
+Returns the randomly generated id of the document. The id can be used later for verification
+
+2.
+```java
+Long[] docIds = solr.addDocumentsWith(text1, text2, text3, ...)
+```
+A varargs version of `addDocumentWith`, this adds text1, text2... textN to the `defaultContentField`
+Returns an array of the documentIds
+3.
+```java
+Long[] docIds = solr.addDocumentWithField(
+## Searching
+
+## Asserts / Checks
+
