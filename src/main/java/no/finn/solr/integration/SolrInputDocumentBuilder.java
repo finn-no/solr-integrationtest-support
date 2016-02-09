@@ -70,16 +70,22 @@ public class SolrInputDocumentBuilder {
     }
 
     /**
-     * Adds a field with passed in value to the InputDoc
-     * @param fieldName - name of field
-     * @param value - value of field
-     * @return this
+     * Adds a field with passed in string value to the InputDoc
+     * @param fieldName name of field
+     * @param value value of field
+     * @return this for further chaining
      */
     public SolrInputDocumentBuilder withField(String fieldName, String value) {
         doc.addField(fieldName, value);
         return this;
     }
 
+    /**
+     *
+     * @param fieldName name of field
+     * @param value value of field
+     * @return this for further chaining
+     */
     public SolrInputDocumentBuilder withField(String fieldName, Object value) {
         doc.addField(fieldName, value);
         return this;

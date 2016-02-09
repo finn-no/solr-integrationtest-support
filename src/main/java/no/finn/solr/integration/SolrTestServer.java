@@ -449,7 +449,7 @@ public class SolrTestServer {
     /**
      * Verifies that ids come in the order expected. Used to check that sorts are working as expected
      *
-     * @param sequence
+     * @param sequence the ids in the correct sequence
      */
     public void verifySequenceOfHits(Long... sequence) {
         assertThat(sequence.length <= response.getResults().getNumFound(), CoreMatchers.is(true));
