@@ -62,6 +62,14 @@ testCompile "no.finn.search:solr-integrationtest-support:1.0.0
 * Have your JUnit test extend `SolrTestCase`
 * Test your schema and solrconfig.xml
 
+## Examples
+
+Example setup is available for both maven and gradle inside the exampleprojects folder
+
+### [Maven](exampleprojects/maven)
+
+### [Gradle](exampleprojects/gradle)
+
 ## Exampletest
 
 
