@@ -16,7 +16,7 @@ See [Contributing](CONTRIBUTING.md)
 
 ## Maven
 
-### Repository
+### Repository (jcenter)
 
 ```xml
 <repositories>
@@ -25,9 +25,9 @@ See [Contributing](CONTRIBUTING.md)
         <snapshots>
             <enabled>false</enabled>
         </snapshots>
-        <id>bintray-finn-no-search</id>
+        <id>central</id>
         <name>bintray</name>
-        <url>http://dl.bintray.com/finn-no/search</url>
+        <url>http://jcenter.bintray.com</url>
     </repository>
     ...
 </repositories>
@@ -47,9 +47,7 @@ See [Contributing](CONTRIBUTING.md)
 ### Repository
 ```groovy
 repositories {
-    maven {
-        url  "http://dl.bintray.com/finn-no/search"
-    }
+    jcenter()
 }
 ```
 ### Artifact
