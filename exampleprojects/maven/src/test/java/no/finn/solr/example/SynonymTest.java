@@ -1,4 +1,4 @@
-package no.finn.solr.integrationtest;
+package no.finn.solr.example;
 
 import no.finn.solr.integration.SolrTestCase;
 

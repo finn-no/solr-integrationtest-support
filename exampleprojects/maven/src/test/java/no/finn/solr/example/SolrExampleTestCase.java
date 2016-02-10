@@ -1,9 +1,12 @@
-package no.finn.solr.integration;
+package no.finn.solr.example;
 
 import java.util.Collection;
 
+import no.finn.solr.integration.SolrInputDocumentBuilder;
+import no.finn.solr.integration.SolrTestCase;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
+import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
@@ -51,6 +54,6 @@ public class SolrExampleTestCase extends SolrTestCase {
         Collection<Object> compositefield = hit.getFieldValues("compositefield");
         assertTrue(compositefield.contains("Venus"));
         assertTrue(compositefield.contains("Planetology"));
-        assertThat(hit.getFieldValue("id"), is(String.valueOf(compositeId)));
+        assertThat(String.valueOf(hit.getFieldValue("id")), CoreMatchers.is(String.valueOf(compositeId)));
     }
 }
