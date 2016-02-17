@@ -27,7 +27,9 @@ public class SolrTestCase {
      */
     @AfterClass
     public static void teardownSolr() throws IOException, SolrServerException {
-        solr.shutdown();
+        if (solr != null) {
+            solr.shutdown();
+        }
     }
 
     /**
