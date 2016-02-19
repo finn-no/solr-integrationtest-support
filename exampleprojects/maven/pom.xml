@@ -16,7 +16,7 @@
     <dependency>
       <groupId>no.finn.search</groupId>
       <artifactId>solr-integrationtest-support</artifactId>
-      <version>1.0.0</version>
+      <version>1.0.1</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
