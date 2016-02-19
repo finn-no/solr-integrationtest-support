@@ -6,4 +6,5 @@
 * Checkout tag to release
 * Set BINTRAY_USER and BINTRAY_API_KEY to your Bintray username and Api key respectively
 * Run `./gradlew bintrayUpload`
+* Remember to publish the uploaded files through the Bintray GUI
 * Done
