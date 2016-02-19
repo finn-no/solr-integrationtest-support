@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.0.0
+### Features
+* Startup
+    * Exceptions in coreloading will now be printed
+    * DataDir is now unique per initialization of SolrTestServer - should support multithreading
+* API change
+    * getClient is now getServer and returns an EmbeddedSolrServer
+
 ## 1.0.1
 ### Bugfix
 * Shutdown on failed test should no longer throw NPE due to non-initialized solr field

@@ -3,11 +3,13 @@ package no.finn.solr.integration;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -15,7 +17,6 @@ import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
-import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.request.ContentStreamUpdateRequest;
 import org.apache.solr.client.solrj.response.Group;
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -37,13 +38,15 @@ public class SolrTestServer {
     private QueryResponse response;
     private String uniqueKeyField = "id";
     private SolrQuery solrQuery = new SolrQuery();
+    private final String dataDir;
 
     private void configureSysProperties() {
         File solrFolder = findSolrFolder();
         String solrHomeAlternative = solrFolder.getAbsolutePath();
-        String solrDataDir = new File(solrFolder.getParentFile(), "data").getAbsolutePath();
+        String solrDataDir = new File(solrFolder.getParentFile(), dataDir).getAbsolutePath();
         String solrHome = System.getProperty("solr.solr.home", solrHomeAlternative);
         System.out.println("Running from: " + solrHome);
+        System.out.println("Datadir is set to " + solrDataDir);
         System.setProperty("solr.solr.home", solrHome);
         System.setProperty("solr.data.dir", System.getProperty("solr.data.dir", solrDataDir));
     }
@@ -67,9 +70,12 @@ public class SolrTestServer {
     private File findSolrFolder() {
         ClassLoader loader = SolrTestServer.class.getClassLoader();
         URL root = loader.getResource(".");
-        String path = root.getPath();
-        File classRoot = new File(path);
-        File solrXml = findSolrXml(findRootOfTests(classRoot));
+        File solrXml = Optional.ofNullable(root)
+            .map(URL::getPath)
+            .map(File::new)
+            .map(classRoot -> findRootOfTests(classRoot))
+            .map(testRoot -> findSolrXml(testRoot))
+            .orElseThrow(() -> new IllegalStateException("Could not find Solr Home folder when looking from " +root));
         System.out.println(solrXml);
         return solrXml.getParentFile();
     }
@@ -78,10 +84,11 @@ public class SolrTestServer {
      * Wires up a Solr Server
      */
     public SolrTestServer() {
+        this.dataDir = UUID.randomUUID().toString();
         configureSysProperties();
         String solrHome = System.getProperty("solr.solr.home");
-        CoreContainer coreContainer = new CoreContainer(solrHome);
-        coreContainer.load();
+        Path solrPath = new File(solrHome).toPath().toAbsolutePath();
+        CoreContainer coreContainer = CoreContainer.createAndLoad(solrPath);
         String coreName = getCore(coreContainer);
         client = new EmbeddedSolrServer(coreContainer, coreName);
     }
@@ -90,17 +97,6 @@ public class SolrTestServer {
         Collection<String> allCoreNames = coreContainer.getAllCoreNames();
         assert allCoreNames.size() > 0;
         return allCoreNames.toArray(new String[0])[0];
-    }
-
-    /**
-     * Sets up a normal Http based client
-     *
-     * @param baseUrl IP or servername of server
-     * @param port    which port does your Solr server run on
-     * @param core    Which core are you using
-     */
-    public SolrTestServer(String baseUrl, String port, String core) {
-        client = new HttpSolrClient(baseUrl + ":" + port + "/solr" + "/" + core);
     }
 
     private boolean isGrouped() {
