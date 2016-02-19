@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.1
+### Bugfix
+* Shutdown on failed test should no longer throw NPE due to non-initialized solr field
+
 ## 1.0.0
 Initial release
 ### Features

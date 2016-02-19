@@ -1,11 +1,13 @@
 plugins {
     id 'java'
+    id 'idea'
     id 'maven'
     id 'maven-publish'
     id 'com.jfrog.bintray' version '1.6'
     id 'net.researchgate.release' version '2.3.4'
 
 }
+
 
 ext.versions = [
   junit: '4.12',
@@ -91,4 +93,10 @@ artifacts {
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.11'
+}
+
+idea {
+    project {
+        languageLevel = '1.8'
+    }
 }
