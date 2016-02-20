@@ -32,7 +32,7 @@ import static org.junit.Assert.assertTrue;
 public class SolrTestServer {
     private final File solrHome;
     private final Path dataDir;
-    private final CoreContainer cores;
+    private final CoreContainer coreContainer;
     private final SolrClient client;
     private String defaultContentField = "body";
     private String groupField = null;
@@ -91,9 +91,22 @@ public class SolrTestServer {
         }
         configureSysProperties(solrHome, dataDir);
         Path solrPath = solrHome.toPath().toAbsolutePath();
-        this.cores = CoreContainer.createAndLoad(solrPath);
-        String coreName = getCore(cores);
-        client = new EmbeddedSolrServer(cores, coreName);
+        this.coreContainer = CoreContainer.createAndLoad(solrPath);
+        assertNoLoadErrors(coreContainer);
+        String coreName = getCore(coreContainer);
+        client = new EmbeddedSolrServer(coreContainer, coreName);
+    }
+
+    private void assertNoLoadErrors(CoreContainer coreContainer) {
+        Map<String, CoreContainer.CoreLoadFailure> coreInitFailures = coreContainer.getCoreInitFailures();
+        for (CoreContainer.CoreLoadFailure coreLoadFailure : coreInitFailures.values()) {
+            System.out.println("Error in loading core: " + coreLoadFailure.cd.getCollectionName());
+            System.out.println("Exception: ");
+            for (StackTraceElement stackTraceElement : coreLoadFailure.exception.getStackTrace()) {
+                System.out.println(stackTraceElement);
+            }
+        }
+        assert coreInitFailures.size() == 0;
     }
 
     private void copyFilesTo(File solrHome, File solrFolder) throws IOException {
@@ -111,8 +124,8 @@ public class SolrTestServer {
     }
 
     public void shutdown() throws IOException {
-        if (cores != null) {
-            cores.shutdown();
+        if (coreContainer != null) {
+            coreContainer.shutdown();
         }
         client.close();
     }
@@ -452,7 +465,7 @@ public class SolrTestServer {
 
     /**
      * Verifies that ids come in the order expected. Used to check that sorts are working as expected
-     *
+     * @param response the result of the search
      * @param sequence the ids in the correct sequence
      */
     public void verifySequenceOfHits(QueryResponse response, Long... sequence) {
@@ -470,6 +483,7 @@ public class SolrTestServer {
 
     /**
      * Verifiies that we've got exactly one hit
+     * @param response the result of the search
      */
     public void verifyOneHit(QueryResponse response) {
         verifyHits(response, 1L);
@@ -477,7 +491,7 @@ public class SolrTestServer {
 
     /**
      * Verifies `hits` number of hits
-     *
+     * @param response the result of the search
      * @param hits amount of expected hits
      */
     public void verifyHits(QueryResponse response, long hits) {
@@ -487,7 +501,7 @@ public class SolrTestServer {
 
     /**
      * Verifies that ngroups response is of expected value
-     *
+     * @param response the result of the search
      * @param groups amount of groups expected
      */
     public void verifyNoOfGroups(QueryResponse response, long groups) {
@@ -574,6 +588,7 @@ public class SolrTestServer {
     }
 
     /**
+     * @param response QueryResponse to fetch highlight snippets from
      * @return Highlight snippets
      */
     public List<String> getSnippets(QueryResponse response) {
@@ -594,7 +609,7 @@ public class SolrTestServer {
 
     /**
      * JUnit assert that a facet query has the expected hit count
-     *
+     * @param response where to locate the facet
      * @param facetName name of the facet
      * @param hitCount  expected hit count
      */
