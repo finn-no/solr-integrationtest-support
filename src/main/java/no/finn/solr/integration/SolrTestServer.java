@@ -9,7 +9,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -31,24 +30,21 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class SolrTestServer {
-    private SolrClient client;
+    private final File solrHome;
+    private final Path dataDir;
+    private final CoreContainer cores;
+    private final SolrClient client;
     private String defaultContentField = "body";
     private String groupField = null;
     private String search;
-    private QueryResponse response;
     private String uniqueKeyField = "id";
     private SolrQuery solrQuery = new SolrQuery();
-    private final String dataDir;
 
-    private void configureSysProperties() {
-        File solrFolder = findSolrFolder();
-        String solrHomeAlternative = solrFolder.getAbsolutePath();
-        String solrDataDir = new File(solrFolder.getParentFile(), dataDir).getAbsolutePath();
-        String solrHome = System.getProperty("solr.solr.home", solrHomeAlternative);
+    private void configureSysProperties(File solrHome, Path data) {
         System.out.println("Running from: " + solrHome);
-        System.out.println("Datadir is set to " + solrDataDir);
-        System.setProperty("solr.solr.home", solrHome);
-        System.setProperty("solr.data.dir", System.getProperty("solr.data.dir", solrDataDir));
+        System.out.println("Datadir is set to " + dataDir);
+        System.setProperty("solr.solr.home", solrHome.getAbsolutePath());
+        System.setProperty("solr.data.dir", System.getProperty("solr.data.dir", dataDir.toAbsolutePath().toString()));
     }
 
     private File findRootOfTests(File folder) {
@@ -70,6 +66,7 @@ public class SolrTestServer {
     private File findSolrFolder() {
         ClassLoader loader = SolrTestServer.class.getClassLoader();
         URL root = loader.getResource(".");
+
         File solrXml = Optional.ofNullable(root)
             .map(URL::getPath)
             .map(File::new)
@@ -84,13 +81,23 @@ public class SolrTestServer {
      * Wires up a Solr Server
      */
     public SolrTestServer() {
-        this.dataDir = UUID.randomUUID().toString();
-        configureSysProperties();
-        String solrHome = System.getProperty("solr.solr.home");
-        Path solrPath = new File(solrHome).toPath().toAbsolutePath();
-        CoreContainer coreContainer = CoreContainer.createAndLoad(solrPath);
-        String coreName = getCore(coreContainer);
-        client = new EmbeddedSolrServer(coreContainer, coreName);
+
+        this.solrHome = FileUtils.getTempDirectory();
+        this.dataDir = solrHome.toPath().resolve("data");
+        try {
+            copyFilesTo(solrHome, findSolrFolder());
+        } catch (IOException e) {
+            System.out.println("IOException while copying to temporary folder");
+        }
+        configureSysProperties(solrHome, dataDir);
+        Path solrPath = solrHome.toPath().toAbsolutePath();
+        this.cores = CoreContainer.createAndLoad(solrPath);
+        String coreName = getCore(cores);
+        client = new EmbeddedSolrServer(cores, coreName);
+    }
+
+    private void copyFilesTo(File solrHome, File solrFolder) throws IOException {
+        FileUtils.copyDirectory(solrFolder, solrHome);
     }
 
     private String getCore(CoreContainer coreContainer) {
@@ -104,9 +111,11 @@ public class SolrTestServer {
     }
 
     public void shutdown() throws IOException {
+        if (cores != null) {
+            cores.shutdown();
+        }
         client.close();
     }
-
     /**
      * Sets a parameter
      *
@@ -353,9 +362,9 @@ public class SolrTestServer {
      * @throws SolrServerException if there is an error on the server
      */
     public void performSearchAndAssertHits(String search, Long... expectedIds) throws IOException, SolrServerException {
-        dismaxSearch(search);
-        verifyHits(expectedIds.length);
-        assertDocumentsInResult(expectedIds);
+        QueryResponse response = dismaxSearch(search);
+        verifyHits(response, expectedIds.length);
+        assertDocumentsInResult(response, expectedIds);
     }
 
     /**
@@ -367,8 +376,7 @@ public class SolrTestServer {
      * @throws SolrServerException if there is an error on the server
      */
     public void performSearchAndAssertNoOfHits(String search, long resultCount) throws IOException, SolrServerException {
-        dismaxSearch(search);
-        verifyHits(resultCount);
+        verifyHits(dismaxSearch(search), resultCount);
     }
 
     /**
@@ -393,8 +401,7 @@ public class SolrTestServer {
     public QueryResponse search(String searchQuery) throws IOException, SolrServerException {
         search = searchQuery;
         withParam("q", StringUtils.defaultIfBlank(searchQuery, ""));
-        search();
-        return response;
+        return search();
     }
 
     /**
@@ -409,8 +416,7 @@ public class SolrTestServer {
     public QueryResponse search(String field, String value) throws IOException, SolrServerException {
         search = field + ":" + value;
         withParam("q", StringUtils.defaultIfBlank(field + ":" + value, ""));
-        search();
-        return response;
+        return search();
     }
 
     /**
@@ -424,8 +430,7 @@ public class SolrTestServer {
         if (StringUtils.isEmpty(solrQuery.get("q"))) {
             withParam("hl.q", "*:*");
         }
-        response = client.query(solrQuery);
-        return response;
+        return client.query(solrQuery);
     }
 
     /**
@@ -450,8 +455,8 @@ public class SolrTestServer {
      *
      * @param sequence the ids in the correct sequence
      */
-    public void verifySequenceOfHits(Long... sequence) {
-        assertThat(sequence.length <= response.getResults().getNumFound(), CoreMatchers.is(true));
+    public void verifySequenceOfHits(QueryResponse response, Long... sequence) {
+        assertThat(response.getResults().getNumFound(), is(sequence.length));
         int i = 0;
         for (long id : sequence) {
             String assertMessage = "Document " + i + " should have docId: " + id;
@@ -466,8 +471,8 @@ public class SolrTestServer {
     /**
      * Verifiies that we've got exactly one hit
      */
-    public void verifyOneHit() {
-        verifyHits(1L);
+    public void verifyOneHit(QueryResponse response) {
+        verifyHits(response, 1L);
     }
 
     /**
@@ -475,7 +480,7 @@ public class SolrTestServer {
      *
      * @param hits amount of expected hits
      */
-    public void verifyHits(long hits) {
+    public void verifyHits(QueryResponse response, long hits) {
         long matches = isGrouped() ? response.getGroupResponse().getValues().get(0).getMatches() : response.getResults().getNumFound();
         assertThat("Search for \"" + search + "\" should get " + hits + " results, but got: " + matches, matches, is(hits));
     }
@@ -485,7 +490,7 @@ public class SolrTestServer {
      *
      * @param groups amount of groups expected
      */
-    public void verifyNoOfGroups(long groups) {
+    public void verifyNoOfGroups(QueryResponse response, long groups) {
         if (isGrouped()) {
             int matchGroups = response.getGroupResponse().getValues().get(0).getNGroups();
             assertThat("Search for \"" + search + "\" should get " + groups + " groups, but got: " + matchGroups,
@@ -496,23 +501,23 @@ public class SolrTestServer {
 
     /**
      * JUnit assert that the document ids can be found in the result
-     *
+     * @param response QueryResponse to check
      * @param docIds ids expected
      */
-    public void assertDocumentsInResult(Long... docIds) {
+    public void assertDocumentsInResult(QueryResponse response, Long... docIds) {
         for (Long docId : docIds) {
             assertTrue("DocId: [" + docId + "] should be in the result set",
-                isGrouped() ? docIdIsInGroupedResponse(docId) : docIdIsInList(docId, response.getResults()));
+                isGrouped() ? docIdIsInGroupedResponse(response, docId) : docIdIsInList(docId, response.getResults()));
         }
     }
 
     /**
      * One of the groups returned from the search contains the id
-     *
+     * @param response Query response to check
      * @param docId id expected
      * @return whether or not the docid was contained in any of groups
      */
-    private boolean docIdIsInGroupedResponse(Long docId) {
+    private boolean docIdIsInGroupedResponse(QueryResponse response, Long docId) {
         List<SolrDocument> docs = new ArrayList<>();
         for (Group group : response.getGroupResponse().getValues().get(0).getValues()) {
             SolrDocumentList list = group.getResult();
@@ -528,9 +533,9 @@ public class SolrTestServer {
             Object id = doc.getFirstValue(uniqueKeyField);
             if (id == null) {
                 throw new NullPointerException(uniqueKeyField + " not found in doc. you should probably call solr.withReturnedFields" +
-                    "(\"id\")" +
+                    "(\"" + uniqueKeyField + "\")" +
                     " before calling the tests, " +
-                    "" + "or add \"id\" to the fl-parameter in solrconfig.xml");
+                    "" + "or add \"+"+uniqueKeyField+ "\" to the fl-parameter in solrconfig.xml");
             }
             if (id.equals(String.valueOf(docId))) {
                 return true;
@@ -571,7 +576,7 @@ public class SolrTestServer {
     /**
      * @return Highlight snippets
      */
-    public List<String> getSnippets() {
+    public List<String> getSnippets(QueryResponse response) {
         return getSnippets(response.getHighlighting());
     }
 
@@ -593,7 +598,7 @@ public class SolrTestServer {
      * @param facetName name of the facet
      * @param hitCount  expected hit count
      */
-    public void assertFacetQueryHasHitCount(String facetName, int hitCount) {
+    public void assertFacetQueryHasHitCount(QueryResponse response, String facetName, int hitCount) {
         assertThat(response.getFacetQuery().get(facetName), is(hitCount));
     }
 
@@ -604,14 +609,6 @@ public class SolrTestServer {
      */
     public SolrClient getClient() {
         return this.client;
-    }
-
-    /**
-     * Convenience method to process QueryResponse from server manually rather than using the helper methods
-     * @return The current response (if any)
-     */
-    public QueryResponse getResponse() {
-        return this.response;
     }
 
 }
