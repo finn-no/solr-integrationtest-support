@@ -46,7 +46,7 @@
         <version>2.19.1</version>
         <configuration>
           <parallel>classes</parallel>
-          <perCoreThreadCount>true</perCoreThreadCount>
+          <perCoreThreadCount>false</perCoreThreadCount>
         </configuration>
       </plugin>
     </plugins>

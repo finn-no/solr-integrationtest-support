@@ -104,9 +104,11 @@ public class SolrTestServer {
         Map<String, CoreContainer.CoreLoadFailure> coreInitFailures = coreContainer.getCoreInitFailures();
         for (CoreContainer.CoreLoadFailure coreLoadFailure : coreInitFailures.values()) {
             System.out.println("Error in loading core: " + coreLoadFailure.cd.getCollectionName());
-            System.out.println("Exception: ");
-            for (StackTraceElement stackTraceElement : coreLoadFailure.exception.getStackTrace()) {
-                System.out.println(stackTraceElement);
+            System.out.println("Instancedir set to: " +coreLoadFailure.cd.getInstanceDir());
+            System.out.println("Error message: " +coreLoadFailure.exception.getMessage());
+            System.out.println("Cause: " +coreLoadFailure.exception.getCause());
+            if (coreLoadFailure.exception.getCause().getCause() != null) {
+                System.out.println("Cause of Cause: " +coreLoadFailure.exception.getCause().getCause());
             }
         }
         assert coreInitFailures.size() == 0;
@@ -132,6 +134,7 @@ public class SolrTestServer {
         if (coreContainer != null) {
             coreContainer.shutdown();
         }
+        core.ifPresent(c -> c.close());
         solrHome.delete();
     }
 
