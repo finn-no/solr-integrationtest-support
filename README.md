@@ -57,7 +57,7 @@ testCompile "no.finn.search:solr-integrationtest-support:1.0.0
 
 ## Further steps
 
-* For now, you'll need to run singlethreaded, because the EmbeddedSolrServer locks the indexdirectory
+* For now, you'll need to run singlethreaded, because the EmbeddedSolrServer locks the indexdirectory (see [pom.xml](exampleprojects/maven/pom.xml) for configuration of surefire.)
 * We usually put our Solr Configs in src/main/resources or src/test/resources
 * Have your JUnit test extend `SolrTestCase`
 * Test your schema and solrconfig.xml
