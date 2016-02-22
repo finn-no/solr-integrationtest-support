@@ -12,6 +12,17 @@ import java.util.stream.Collectors;
 import static java.lang.System.getProperty;
 import static org.junit.Assert.fail;
 
+/**
+ * SOLR does not parse XML (like it probably should).  It parses text line by line.  One consequency of this is that if the
+ * shards and masterUrl-lines end in a lineshift, the last host in these lists will be used as a host, including the trailing
+ * lineshift.  SOLR will fail to start in such cases.  To validate you config for this - create the follwing test.
+ * <pre>
+ * @Test
+ * public void validateSolrConfig() throws URISyntaxException, IOException {
+ *    ValidateConfig.validateSolrConfig();
+ * }
+ * </pre>
+ */
 public class ValidateConfig {
     private static final String FILE = "/conf/solrconfig.xml";
 
@@ -27,16 +38,20 @@ public class ValidateConfig {
         }
 
         long numMatches = Files.lines(path).filter(ValidateConfig::shouldEndWithClosingStr).count();
-        System.out.println("Num potential lines that could fail: " + numMatches);
+        System.out.println("Num lines that should be closed with </str>: " + numMatches);
 
-        final long numFailed = Files.lines(path).filter(ValidateConfig::shouldEndWithClosingStr).filter(ValidateConfig::doesNotEndInStr).count();
-        System.out.println("Num failed: " + numFailed);
+        final long numFailed = Files.lines(path)
+                                    .filter(ValidateConfig::shouldEndWithClosingStr)
+                                    .filter(ValidateConfig::doesNotEndInStr)
+                                    .count();
+        System.out.println("Num lines that do not end with </str> but should: " + numFailed);
+
         if (numFailed > 0L) {
             final List<String> collect = Files.lines(path)
-                    .filter(ValidateConfig::shouldEndWithClosingStr)
-                    .filter(ValidateConfig::doesNotEndInStr)
-                    .map(l -> l.trim() + "\n")
-                    .collect(Collectors.toList());
+                                              .filter(ValidateConfig::shouldEndWithClosingStr)
+                                              .filter(ValidateConfig::doesNotEndInStr)
+                                              .map(l -> l.trim() + "\n")
+                                              .collect(Collectors.toList());
             fail("Failed for " + numFailed + " lines: " + collect);
         }
 

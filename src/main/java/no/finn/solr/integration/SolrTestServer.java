@@ -74,8 +74,8 @@ public class SolrTestServer {
         File solrXml = ofNullable(root)
             .map(URL::getPath)
             .map(File::new)
-            .map(classRoot -> findRootOfTests(classRoot))
-            .map(testRoot -> findSolrXml(testRoot))
+            .map(this::findRootOfTests)
+            .map(this::findSolrXml)
             .orElseThrow(() -> new IllegalStateException("Could not find Solr Home folder when looking from " +root));
         System.out.println(solrXml);
         return solrXml.getParentFile();
@@ -482,7 +482,7 @@ public class SolrTestServer {
      */
     public void verifySequenceOfHits(QueryResponse response, Long... sequence) {
         assertThat("getNumFound: " + response.getResults().getNumFound() + " not same length as expexted: " + sequence.length,
-                   response.getResults().getNumFound(), is(Long.valueOf(sequence.length)));
+                   response.getResults().getNumFound(), is((long) sequence.length));
         int i = 0;
         for (long id : sequence) {
             String assertMessage = "Document " + i + " should have docId: " + id;
