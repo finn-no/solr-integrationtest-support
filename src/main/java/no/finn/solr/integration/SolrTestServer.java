@@ -5,10 +5,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -23,6 +23,8 @@ import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.core.CoreContainer;
+import org.apache.solr.core.SolrCore;
+import org.apache.solr.handler.component.SearchComponent;
 import org.hamcrest.CoreMatchers;
 
 import static org.hamcrest.core.Is.is;
@@ -33,6 +35,7 @@ public class SolrTestServer {
     private final File solrHome;
     private final Path dataDir;
     private final CoreContainer coreContainer;
+    private final Optional<SolrCore> core;
     private final SolrClient client;
     private String defaultContentField = "body";
     private String groupField = null;
@@ -82,7 +85,7 @@ public class SolrTestServer {
      */
     public SolrTestServer() {
 
-        this.solrHome = FileUtils.getTempDirectory();
+        this.solrHome = new File(FileUtils.getTempDirectory(), UUID.randomUUID().toString());
         this.dataDir = solrHome.toPath().resolve("data");
         try {
             copyFilesTo(solrHome, findSolrFolder());
@@ -93,8 +96,8 @@ public class SolrTestServer {
         Path solrPath = solrHome.toPath().toAbsolutePath();
         this.coreContainer = CoreContainer.createAndLoad(solrPath);
         assertNoLoadErrors(coreContainer);
-        String coreName = getCore(coreContainer);
-        client = new EmbeddedSolrServer(coreContainer, coreName);
+        core = getCore(coreContainer);
+        client = core.map(c -> new EmbeddedSolrServer(c)).orElse(null);
     }
 
     private void assertNoLoadErrors(CoreContainer coreContainer) {
@@ -113,10 +116,11 @@ public class SolrTestServer {
         FileUtils.copyDirectory(solrFolder, solrHome);
     }
 
-    private String getCore(CoreContainer coreContainer) {
-        Collection<String> allCoreNames = coreContainer.getAllCoreNames();
-        assert allCoreNames.size() > 0;
-        return allCoreNames.toArray(new String[0])[0];
+    private Optional<SolrCore> getCore(CoreContainer coreContainer) {
+        return coreContainer.getAllCoreNames()
+            .stream()
+            .findFirst()
+            .map(name -> coreContainer.getCore(name));
     }
 
     private boolean isGrouped() {
@@ -124,10 +128,15 @@ public class SolrTestServer {
     }
 
     public void shutdown() throws IOException {
+        client.close();
         if (coreContainer != null) {
             coreContainer.shutdown();
         }
-        client.close();
+        solrHome.delete();
+    }
+
+    public Optional<SearchComponent> getSearchComponent(String componentName) {
+        return core.map(c -> c.getSearchComponent(componentName));
     }
     /**
      * Sets a parameter
