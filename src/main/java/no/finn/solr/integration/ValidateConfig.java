@@ -17,7 +17,6 @@ import static org.junit.Assert.fail;
  * shards and masterUrl-lines end in a lineshift, the last host in these lists will be used as a host, including the trailing
  * lineshift.  SOLR will fail to start in such cases.  To validate you config for this - create the follwing test.
  * <pre>
- * &commat;Test
  * public void validateSolrConfig() throws URISyntaxException, IOException {
  *    ValidateConfig.validateSolrConfig();
  * }
