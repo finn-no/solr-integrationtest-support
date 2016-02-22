@@ -134,7 +134,7 @@ public class SolrTestServer {
         if (coreContainer != null) {
             coreContainer.shutdown();
         }
-        core.ifPresent(c -> c.close());
+        core.filter(c -> !c.isClosed()).ifPresent(c -> c.close());
         solrHome.delete();
     }
 
