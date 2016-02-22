@@ -98,18 +98,18 @@ public class SolrTestServer {
         this.coreContainer = CoreContainer.createAndLoad(solrPath);
         assertNoLoadErrors(coreContainer);
         core = getCore(coreContainer);
-        client = core.map(c -> new EmbeddedSolrServer(c)).orElse(null);
+        client = core.map(EmbeddedSolrServer::new).orElse(null);
     }
 
     private void assertNoLoadErrors(CoreContainer coreContainer) {
         Map<String, CoreContainer.CoreLoadFailure> coreInitFailures = coreContainer.getCoreInitFailures();
         for (CoreContainer.CoreLoadFailure coreLoadFailure : coreInitFailures.values()) {
             System.out.println("Error in loading core: " + coreLoadFailure.cd.getCollectionName());
-            System.out.println("Instancedir set to: " +coreLoadFailure.cd.getInstanceDir());
-            System.out.println("Error message: " +coreLoadFailure.exception.getMessage());
-            System.out.println("Cause: " +coreLoadFailure.exception.getCause());
+            System.out.println("Instancedir set to: " + coreLoadFailure.cd.getInstanceDir());
+            System.out.println("Error message: " + coreLoadFailure.exception.getMessage());
+            System.out.println("Cause: " + coreLoadFailure.exception.getCause());
             if (coreLoadFailure.exception.getCause().getCause() != null) {
-                System.out.println("Cause of Cause: " +coreLoadFailure.exception.getCause().getCause());
+                System.out.println("Cause of Cause: " + coreLoadFailure.exception.getCause().getCause());
             }
         }
         assert coreInitFailures.size() == 0;
@@ -121,9 +121,9 @@ public class SolrTestServer {
 
     private Optional<SolrCore> getCore(CoreContainer coreContainer) {
         return coreContainer.getAllCoreNames()
-            .stream()
-            .findFirst()
-            .map(name -> coreContainer.getCore(name));
+                            .stream()
+                            .findFirst()
+                            .map(coreContainer::getCore);
     }
 
     private boolean isGrouped() {
@@ -140,6 +140,7 @@ public class SolrTestServer {
     public Optional<SearchComponent> getSearchComponent(String componentName) {
         return core.map(c -> c.getSearchComponent(componentName));
     }
+
     /**
      * Sets a parameter
      *
@@ -446,9 +447,9 @@ public class SolrTestServer {
     /**
      * Performs a search with the parameters currently set
      *
+     * @return The Solr QueryResponse
      * @throws IOException         if there is a communication error with the server
      * @throws SolrServerException if there is an error on the server
-     * @return The Solr QueryResponse
      */
     public QueryResponse search() throws IOException, SolrServerException {
         if (StringUtils.isEmpty(solrQuery.get("q"))) {
@@ -461,9 +462,9 @@ public class SolrTestServer {
      * Performs a search using the dismax query handler
      *
      * @param query search to perform
+     * @return The Solr QueryResponse
      * @throws IOException         if there is a communication error with the server
      * @throws SolrServerException if there is an error on the server
-     * @return The Solr QueryResponse
      */
     public QueryResponse dismaxSearch(String query) throws IOException, SolrServerException {
         withParam("qt", "dismax");
@@ -480,7 +481,8 @@ public class SolrTestServer {
      * @param sequence the ids in the correct sequence
      */
     public void verifySequenceOfHits(QueryResponse response, Long... sequence) {
-        assertThat(response.getResults().getNumFound(), is(Long.valueOf(sequence.length)));
+        assertThat("getNumFound: " + response.getResults().getNumFound() + " not same length as expexted: " + sequence.length,
+                   response.getResults().getNumFound(), is(Long.valueOf(sequence.length)));
         int i = 0;
         for (long id : sequence) {
             String assertMessage = "Document " + i + " should have docId: " + id;
@@ -503,7 +505,7 @@ public class SolrTestServer {
     /**
      * Verifies `hits` number of hits
      * @param response the result of the search
-     * @param hits amount of expected hits
+     * @param hits     amount of expected hits
      */
     public void verifyHits(QueryResponse response, long hits) {
         long matches = isGrouped() ? response.getGroupResponse().getValues().get(0).getMatches() : response.getResults().getNumFound();
@@ -513,7 +515,7 @@ public class SolrTestServer {
     /**
      * Verifies that ngroups response is of expected value
      * @param response the result of the search
-     * @param groups amount of groups expected
+     * @param groups   amount of groups expected
      */
     public void verifyNoOfGroups(QueryResponse response, long groups) {
         if (isGrouped()) {
@@ -527,7 +529,7 @@ public class SolrTestServer {
     /**
      * JUnit assert that the document ids can be found in the result
      * @param response QueryResponse to check
-     * @param docIds ids expected
+     * @param docIds   ids expected
      */
     public void assertDocumentsInResult(QueryResponse response, Long... docIds) {
         for (Long docId : docIds) {
@@ -539,7 +541,7 @@ public class SolrTestServer {
     /**
      * One of the groups returned from the search contains the id
      * @param response Query response to check
-     * @param docId id expected
+     * @param docId    id expected
      * @return whether or not the docid was contained in any of groups
      */
     private boolean docIdIsInGroupedResponse(QueryResponse response, Long docId) {
@@ -579,11 +581,14 @@ public class SolrTestServer {
      * @param endHighlightingElement   the closing element to look for
      * @param snippets                 the snippets returned from solr as highlights
      */
-    public void assertHighlight(String search, String startHighlightingElement, String endHighlightingElement, List<String> snippets) {
+    public void assertHighlight(String search,
+                                String startHighlightingElement,
+                                String endHighlightingElement,
+                                List<String> snippets) {
         String pattern = String.format("%s%s%s", startHighlightingElement, search, endHighlightingElement);
         for (String snippet : snippets) {
             if (snippet.contains(search)) {
-                assertTrue(snippet.contains(pattern));
+                assertTrue("missing " + pattern + " in: '" + snippet + "'", snippet.contains(pattern));
             }
         }
     }
@@ -609,7 +614,7 @@ public class SolrTestServer {
     public void assertTeaser(String query, String teaser, List<String> snippets) {
         for (String snippet : snippets) {
             if (query == null || !snippet.contains(query)) {
-                assertThat(snippet, is(teaser));
+                assertThat("teaser: " + teaser + " != snippet: " + snippet, snippet, is(teaser));
             }
         }
     }
@@ -620,12 +625,14 @@ public class SolrTestServer {
 
     /**
      * JUnit assert that a facet query has the expected hit count
-     * @param response where to locate the facet
+     *
+     * @param response  where to locate the facet
      * @param facetName name of the facet
      * @param hitCount  expected hit count
      */
     public void assertFacetQueryHasHitCount(QueryResponse response, String facetName, int hitCount) {
-        assertThat(response.getFacetQuery().get(facetName), is(hitCount));
+        final int facetCount = response.getFacetQuery().get(facetName);
+        assertThat("facetCount: " + facetCount + " != expected hitcount: " + hitCount, facetCount, is(hitCount));
     }
 
     /**
