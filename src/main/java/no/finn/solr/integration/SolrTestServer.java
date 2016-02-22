@@ -27,6 +27,7 @@ import org.apache.solr.core.SolrCore;
 import org.apache.solr.handler.component.SearchComponent;
 import org.hamcrest.CoreMatchers;
 
+import static java.util.Optional.ofNullable;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -70,7 +71,7 @@ public class SolrTestServer {
         ClassLoader loader = SolrTestServer.class.getClassLoader();
         URL root = loader.getResource(".");
 
-        File solrXml = Optional.ofNullable(root)
+        File solrXml = ofNullable(root)
             .map(URL::getPath)
             .map(File::new)
             .map(classRoot -> findRootOfTests(classRoot))
@@ -131,10 +132,8 @@ public class SolrTestServer {
 
     public void shutdown() throws IOException {
         client.close();
-        if (coreContainer != null) {
-            coreContainer.shutdown();
-        }
-        core.filter(c -> !c.isClosed()).ifPresent(c -> c.close());
+        core.filter(c -> !c.isClosed()).ifPresent(SolrCore::close);
+        ofNullable(coreContainer).filter(CoreContainer::isShutDown).ifPresent(CoreContainer::shutdown);
         solrHome.delete();
     }
 
@@ -481,7 +480,7 @@ public class SolrTestServer {
      * @param sequence the ids in the correct sequence
      */
     public void verifySequenceOfHits(QueryResponse response, Long... sequence) {
-        assertThat(response.getResults().getNumFound(), is(sequence.length));
+        assertThat(response.getResults().getNumFound(), is(Long.valueOf(sequence.length)));
         int i = 0;
         for (long id : sequence) {
             String assertMessage = "Document " + i + " should have docId: " + id;
