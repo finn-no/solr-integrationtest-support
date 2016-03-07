@@ -13,9 +13,9 @@ import static java.lang.System.getProperty;
 import static org.junit.Assert.fail;
 
 /**
- * SOLR does not parse XML (like it probably should).  It parses text line by line.  One consequency of this is that if the
- * shards and masterUrl-lines end in a lineshift, the last host in these lists will be used as a host, including the trailing
- * lineshift.  SOLR will fail to start in such cases.  To validate you config for this - create the follwing test.
+ * SOLR does not parse XML (like it probably should).  It parses text line by line.  One consequence of this is that if the
+ * shards and masterUrl-lines end in a linefeed, the last host in these lists will be used as a host, including the trailing
+ * linefeed.  SOLR will fail to start in such cases.  To validate your config for this - create the following test.
  * <pre>
  * public void validateSolrConfig() throws URISyntaxException, IOException {
  *    ValidateConfig.validateSolrConfig();
