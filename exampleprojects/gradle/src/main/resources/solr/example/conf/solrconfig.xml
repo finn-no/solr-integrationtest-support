@@ -8,7 +8,7 @@
 -->
 <config>
     <abortOnConfigurationError>${solr.abortOnConfigurationError:true}</abortOnConfigurationError>
-    <luceneMatchVersion>LUCENE_50</luceneMatchVersion>
+    <luceneMatchVersion>LUCENE_63</luceneMatchVersion>
 
     <dataDir>${solr.data.dir:./data}</dataDir>
 
@@ -153,8 +153,6 @@
     <requestHandler name="/analysis/document" class="solr.DocumentAnalysisRequestHandler"/>
 
     <requestHandler name="/analysis/field" class="solr.FieldAnalysisRequestHandler"/>
-
-    <requestHandler name="/admin/" class="org.apache.solr.handler.admin.AdminHandlers"/>
 
     <requestHandler name="/admin/stats" class="org.apache.solr.handler.admin.SolrInfoMBeanHandler"/>
 

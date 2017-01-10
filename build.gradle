@@ -11,7 +11,7 @@ plugins {
 
 ext.versions = [
   junit: '4.12',
-  solr: '5.4.1'
+  solr: '6.3.0'
 ]
 
 sourceCompatibility = '1.8'

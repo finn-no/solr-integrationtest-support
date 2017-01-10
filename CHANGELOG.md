@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.0.0
+### Feature
+* Works with Solr/Lucene 6.3.0
+* Needed change
+   * Remove AdminHandler from solrconfig.xml (Deprecated in Solr 6.2)
+
+
 ## 2.0.0
 ### Features
 * Startup
