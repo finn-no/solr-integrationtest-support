@@ -37,7 +37,7 @@ See [Contributing](CONTRIBUTING.md)
 <dependency>
   <groupId>no.finn.search</groupId>
   <artifactId>solr-integrationtest-support</artifactId>
-  <version>1.0.0</version>
+  <version>3.0.0</version>
   <scope>test</scope>
 </dependency>
 ```
@@ -52,7 +52,7 @@ repositories {
 ```
 ### Artifact
 ```groovy
-testCompile "no.finn.search:solr-integrationtest-support:1.0.0
+testCompile "no.finn.search:solr-integrationtest-support:3.0.0
 ```
 
 ## Further steps
