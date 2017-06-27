@@ -1,5 +1,3 @@
-defaultTasks 'build'
-
 plugins {
     id 'java'
     id 'idea'
@@ -13,7 +11,7 @@ plugins {
 
 ext.versions = [
   junit: '4.12',
-  solr: '6.3.0'
+  solr: '6.4.2'
 ]
 
 sourceCompatibility = '1.8'
@@ -94,7 +92,7 @@ artifacts {
 
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.11'
+    gradleVersion = '4.0'
 }
 
 idea {
