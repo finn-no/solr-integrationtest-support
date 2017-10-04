@@ -1,5 +1,12 @@
 # Changelog
 
+## 4.0.0
+### Feature
+* Works with Solr/Lucene 7.0.0+
+* Need to remove mergeFactor from solrconfig.xml
+* Need to remove defaultSearchField from schema.xml
+* Need to remove defaultQueryOperator from schema.xml
+
 ## 3.0.0
 ### Feature
 * Works with Solr/Lucene 6.3.0

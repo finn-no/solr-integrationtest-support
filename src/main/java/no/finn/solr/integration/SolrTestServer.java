@@ -52,7 +52,7 @@ public class SolrTestServer {
     }
 
     private File findRootOfTests(File folder) {
-        if ("target".equals(folder.getName()) || "build".equals(folder.getName())) {
+        if ("target".equals(folder.getName()) || "build".equals(folder.getName()) || "out".equals(folder.getName())) {
             return folder;
         }
         return findRootOfTests(folder.getParentFile());

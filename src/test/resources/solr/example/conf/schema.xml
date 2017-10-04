@@ -16,7 +16,7 @@
  limitations under the License.
 -->
 
-<schema name="example" version="1.5">
+<schema name="example" version="1.6">
     <types>
         <fieldType name="date" class="solr.TrieDateField" omitNorms="true" precisionStep="0" positionIncrementGap="0"/>
         <fieldType name="string" class="solr.StrField" sortMissingLast="true" omitNorms="true"/>
@@ -55,12 +55,6 @@
     <copyField source="title" dest="compositefield"/>
     <copyField source="body" dest="compositefield"/>
     <copyField source="content" dest="compositefield"/>
-
-    <!-- field for the QueryParser to use when an explicit fieldname is absent -->
-    <defaultSearchField>compositefield</defaultSearchField>
-
-    <!-- SolrQueryParser configuration: defaultOperator="AND|OR" -->
-    <solrQueryParser defaultOperator="AND"/>
 
 
 </schema>

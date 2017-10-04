@@ -14,7 +14,6 @@
 
     <indexConfig>
         <useCompoundFile>false</useCompoundFile>
-        <mergeFactor>10</mergeFactor>
         <ramBufferSizeMB>32</ramBufferSizeMB>
         <maxFieldLength>10000</maxFieldLength>
         <writeLockTimeout>1000</writeLockTimeout>
