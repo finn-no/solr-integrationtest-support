@@ -56,11 +56,4 @@
     <copyField source="body" dest="compositefield"/>
     <copyField source="content" dest="compositefield"/>
 
-    <!-- field for the QueryParser to use when an explicit fieldname is absent -->
-    <defaultSearchField>compositefield</defaultSearchField>
-
-    <!-- SolrQueryParser configuration: defaultOperator="AND|OR" -->
-    <solrQueryParser defaultOperator="AND"/>
-
-
 </schema>

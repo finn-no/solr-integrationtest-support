@@ -6,6 +6,6 @@ repositories {
 
 // In this section you declare the dependencies for your production and test code
 dependencies {
-    testCompile 'no.finn.search:solr-integrationtest-support:3.0.1'
+    testCompile 'no.finn.search:solr-integrationtest-support:4.0.0'
     testCompile 'junit:junit:4.12'
 }
