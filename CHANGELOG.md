@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.0.2
+### Feature
+* Now uses Solr/Lucene 7.1.0
+
 ## 4.0.1
 ### Feature
 * Now uses Solr/Lucene 7.0.1
