@@ -3,9 +3,9 @@ package no.finn.solr.integration;
 import java.io.IOException;
 
 import org.apache.solr.client.solrj.SolrServerException;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 
 public class SolrTestCase {
     protected static SolrTestServer solr;
@@ -15,7 +15,7 @@ public class SolrTestCase {
      * @throws IOException if there is a communication error with the server
      * @throws SolrServerException if there is an error on the server
      */
-    @BeforeClass
+    @BeforeAll
     public static void setupSolr() throws IOException, SolrServerException {
         solr = new SolrTestServer().withEmptyIndex();
     }
@@ -23,10 +23,9 @@ public class SolrTestCase {
     /**
      * Stops the Solr server
      * @throws IOException if there is a communication error with the server
-     * @throws SolrServerException if there is an error on the server
      */
-    @AfterClass
-    public static void teardownSolr() throws IOException, SolrServerException {
+    @AfterAll
+    public static void teardownSolr() throws IOException {
         if (solr != null) {
             solr.shutdown();
         }
@@ -37,7 +36,7 @@ public class SolrTestCase {
      * @throws IOException if there is a communication error with the server
      * @throws SolrServerException if there is an error on the server
      */
-    @Before
+    @BeforeEach
     public void delete_all_docs() throws IOException, SolrServerException {
         solr = solr.withEmptyIndex();
     }

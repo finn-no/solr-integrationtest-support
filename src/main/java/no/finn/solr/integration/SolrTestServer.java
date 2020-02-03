@@ -30,7 +30,7 @@ import org.hamcrest.CoreMatchers;
 import static java.util.Optional.ofNullable;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SolrTestServer {
     private final File solrHome;
@@ -61,9 +61,9 @@ public class SolrTestServer {
 
     private File findSolrXml(File folder) {
         Optional<File> solrXml = FileUtils.listFiles(folder, new String[]{"xml"}, true)
-            .stream()
-            .filter(x -> x.getName().equals("solr.xml"))
-            .findFirst();
+                                          .stream()
+                                          .filter(x -> x.getName().equals("solr.xml"))
+                                          .findFirst();
         assert solrXml.isPresent();
         return solrXml.get();
     }
@@ -77,7 +77,7 @@ public class SolrTestServer {
             .map(File::new)
             .map(this::findRootOfTests)
             .map(this::findSolrXml)
-            .orElseThrow(() -> new IllegalStateException("Could not find Solr Home folder when looking from " +root));
+            .orElseThrow(() -> new IllegalStateException("Could not find Solr Home folder when looking from " + root));
         System.out.println(solrXml);
         return solrXml.getParentFile();
     }
@@ -479,6 +479,7 @@ public class SolrTestServer {
 
     /**
      * Verifies that ids come in the order expected. Used to check that sorts are working as expected
+     *
      * @param response the result of the search
      * @param sequence the ids in the correct sequence
      */
@@ -490,14 +491,15 @@ public class SolrTestServer {
             String assertMessage = "Document " + i + " should have docId: " + id;
 
             assertThat(assertMessage,
-                Long.parseLong((String) response.getResults().get(i).getFirstValue(uniqueKeyField)),
-                CoreMatchers.is(id));
+                       Long.parseLong((String) response.getResults().get(i).getFirstValue(uniqueKeyField)),
+                       CoreMatchers.is(id));
             i++;
         }
     }
 
     /**
      * Verifiies that we've got exactly one hit
+     *
      * @param response the result of the search
      */
     public void verifyOneHit(QueryResponse response) {
@@ -506,6 +508,7 @@ public class SolrTestServer {
 
     /**
      * Verifies `hits` number of hits
+     *
      * @param response the result of the search
      * @param hits     amount of expected hits
      */
@@ -516,6 +519,7 @@ public class SolrTestServer {
 
     /**
      * Verifies that ngroups response is of expected value
+     *
      * @param response the result of the search
      * @param groups   amount of groups expected
      */
@@ -523,25 +527,27 @@ public class SolrTestServer {
         if (isGrouped()) {
             int matchGroups = response.getGroupResponse().getValues().get(0).getNGroups();
             assertThat("Search for \"" + search + "\" should get " + groups + " groups, but got: " + matchGroups,
-                (long) matchGroups,
-                is(groups));
+                       (long) matchGroups,
+                       is(groups));
         }
     }
 
     /**
      * JUnit assert that the document ids can be found in the result
+     *
      * @param response QueryResponse to check
      * @param docIds   ids expected
      */
     public void assertDocumentsInResult(QueryResponse response, Long... docIds) {
         for (Long docId : docIds) {
-            assertTrue("DocId: [" + docId + "] should be in the result set",
-                isGrouped() ? docIdIsInGroupedResponse(response, docId) : docIdIsInList(docId, response.getResults()));
+            assertTrue(isGrouped() ? docIdIsInGroupedResponse(response, docId) : docIdIsInList(docId, response.getResults()),
+                       "DocId: [" + docId + "] should be in the result set");
         }
     }
 
     /**
      * One of the groups returned from the search contains the id
+     *
      * @param response Query response to check
      * @param docId    id expected
      * @return whether or not the docid was contained in any of groups
@@ -560,9 +566,9 @@ public class SolrTestServer {
             Object id = doc.getFirstValue(uniqueKeyField);
             if (id == null) {
                 throw new NullPointerException(uniqueKeyField + " not found in doc. you should probably call solr.withReturnedFields" +
-                    "(\"" + uniqueKeyField + "\")" +
-                    " before calling the tests, " +
-                    "" + "or add \"+"+uniqueKeyField+ "\" to the fl-parameter in solrconfig.xml");
+                                                   "(\"" + uniqueKeyField + "\")" +
+                                                   " before calling the tests, " +
+                                                   "" + "or add \"+" + uniqueKeyField + "\" to the fl-parameter in solrconfig.xml");
             }
             if (id.equals(String.valueOf(docId))) {
                 return true;
@@ -588,7 +594,7 @@ public class SolrTestServer {
         String pattern = String.format("%s%s%s", startHighlightingElement, search, endHighlightingElement);
         for (String snippet : snippets) {
             if (snippet.contains(search)) {
-                assertTrue("missing " + pattern + " in: '" + snippet + "'", snippet.contains(pattern));
+                assertTrue(snippet.contains(pattern), "missing " + pattern + " in: '" + snippet + "'");
             }
         }
     }

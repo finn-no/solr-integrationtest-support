@@ -1,6 +1,6 @@
 package no.finn.solr.integration;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class KrellerTest extends SolrTestCase {
 

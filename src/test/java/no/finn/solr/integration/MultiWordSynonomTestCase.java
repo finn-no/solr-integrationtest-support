@@ -3,7 +3,7 @@ package no.finn.solr.integration;
 import java.io.IOException;
 
 import org.apache.solr.client.solrj.SolrServerException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class MultiWordSynonomTestCase extends SolrTestCase {
 

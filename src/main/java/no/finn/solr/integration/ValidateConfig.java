@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.lang.System.getProperty;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * SOLR does not parse XML (like it probably should).  It parses text line by line.  One consequence of this is that if the
@@ -25,7 +25,7 @@ import static org.junit.Assert.fail;
 public class ValidateConfig {
     private static final String FILE = "/conf/solrconfig.xml";
 
-    public static void validateSolrConfig(String solrCore) throws URISyntaxException, IOException {
+    public static void validateSolrConfig(String solrCore) throws IOException {
         final String solrHome = getProperty("solr.solr.home", getSolrHome());
         final String solrConfigPath = solrHome + "/" + solrCore + FILE;
         System.out.println("Validating " + solrConfigPath);

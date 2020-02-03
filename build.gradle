@@ -10,6 +10,7 @@ plugins {
 
 ext.versions = [
     junit   : '4.13',
+    junit5   : '5.6.0',
     solr    : '8.4.1',
     hamcrest: '2.2'
 ]
@@ -26,10 +27,15 @@ repositories {
 dependencies {
     compile "org.apache.solr:solr-solrj:${versions.solr}"
     compile "org.apache.solr:solr-core:${versions.solr}"
-    compile "junit:junit:${versions.junit}"
     compile "org.hamcrest:hamcrest:${versions.hamcrest}"
-
+    compile "org.junit.jupiter:junit-jupiter-api:${versions.junit5}"
+    compile "org.junit.jupiter:junit-jupiter-engine:${versions.junit5}"
 }
+
+test {
+    useJUnitPlatform()
+}
+
 
 tasks.withType(JavaCompile) {
     options.compilerArgs << '-Xlint:unchecked'
