@@ -8,11 +8,10 @@ plugins {
 
 }
 
-
 ext.versions = [
-  junit: '4.13',
-  solr: '8.4.1',
-  hamcrest: '2.2'
+    junit   : '4.13',
+    solr    : '8.4.1',
+    hamcrest: '2.2'
 ]
 
 sourceCompatibility = '1.8'
@@ -37,15 +36,17 @@ tasks.withType(JavaCompile) {
     options.deprecation = true
 }
 
-publishing {
-    publications {
-        maven(MavenPublication) {
-            from components.java
-            artifact sourcesJar
-            artifact javadocJar
-            groupId 'no.finn.search'
-            artifactId 'solr-integrationtest-support'
-            version "${project.version}"
+project.afterEvaluate {
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                from components.java
+                artifact sourcesJar
+                artifact javadocJar
+                groupId 'no.finn.search'
+                artifactId 'solr-integrationtest-support'
+                version "${project.version}"
+            }
         }
     }
 }
@@ -72,12 +73,12 @@ bintray {
     }
 }
 
-task sourcesJar (type: Jar, dependsOn: classes) {
+task sourcesJar(type: Jar, dependsOn: classes) {
     classifier 'sources'
     from sourceSets.main.allJava
 }
 
-task javadocJar (type: Jar, dependsOn: javadoc) {
+task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier 'javadoc'
     from javadoc.destinationDir
 }
@@ -88,8 +89,8 @@ artifacts {
 }
 
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.2.1'
+wrapper {
+    gradleVersion = '6.1.1'
 }
 
 idea {
