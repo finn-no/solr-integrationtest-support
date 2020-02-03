@@ -3,15 +3,16 @@ plugins {
     id 'idea'
     id 'maven'
     id 'maven-publish'
-    id 'com.jfrog.bintray' version '1.7.3'
-    id 'net.researchgate.release' version '2.6.0'
+    id 'com.jfrog.bintray' version '1.8.0'
+    id 'net.researchgate.release' version '2.8.1'
 
 }
 
 
 ext.versions = [
-  junit: '4.12',
-  solr: '7.1.0'
+  junit: '4.13',
+  solr: '8.4.1',
+  hamcrest: '2.2'
 ]
 
 sourceCompatibility = '1.8'
@@ -26,10 +27,15 @@ repositories {
 dependencies {
     compile "org.apache.solr:solr-solrj:${versions.solr}"
     compile "org.apache.solr:solr-core:${versions.solr}"
-    compile 'junit:junit:4.12'
+    compile "junit:junit:${versions.junit}"
+    compile "org.hamcrest:hamcrest:${versions.hamcrest}"
 
 }
 
+tasks.withType(JavaCompile) {
+    options.compilerArgs << '-Xlint:unchecked'
+    options.deprecation = true
+}
 
 publishing {
     publications {
@@ -42,15 +48,6 @@ publishing {
             version "${project.version}"
         }
     }
-}
-
-def getVersionName = { ->
-    def stdout = new ByteArrayOutputStream()
-    exec {
-        commandLine 'git', 'describe', '--tags'
-        standardOutput = stdout
-    }
-    return stdout.toString().trim()
 }
 
 

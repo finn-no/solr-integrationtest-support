@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -28,14 +28,15 @@ import org.apache.solr.handler.component.SearchComponent;
 import org.hamcrest.CoreMatchers;
 
 import static java.util.Optional.ofNullable;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class SolrTestServer {
     private final File solrHome;
     private final Path dataDir;
     private final CoreContainer coreContainer;
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     private final Optional<SolrCore> core;
     private final SolrClient client;
     private String defaultContentField = "body";
@@ -130,6 +131,7 @@ public class SolrTestServer {
         return StringUtils.isNotBlank(groupField);
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public void shutdown() throws IOException {
         client.close();
         core.filter(c -> !c.isClosed()).ifPresent(SolrCore::close);
@@ -310,7 +312,7 @@ public class SolrTestServer {
         for (String content : docContent) {
             docIds.add(addDocumentWith(content));
         }
-        return docIds.toArray(new Long[docIds.size()]);
+        return docIds.toArray(new Long[0]);
     }
 
     /**
@@ -327,7 +329,7 @@ public class SolrTestServer {
         for (String docContent : docContents) {
             docIds.add(addDocumentWithField(fieldName, docContent));
         }
-        return docIds.toArray(new Long[docIds.size()]);
+        return docIds.toArray(new Long[0]);
     }
 
     /**
@@ -343,7 +345,7 @@ public class SolrTestServer {
         for (SolrInputDocumentBuilder documentBuilder : documentBuilders) {
             docIds.add(addDocument(documentBuilder));
         }
-        return docIds.toArray(new Long[docIds.size()]);
+        return docIds.toArray(new Long[0]);
     }
 
 
@@ -548,9 +550,7 @@ public class SolrTestServer {
         List<SolrDocument> docs = new ArrayList<>();
         for (Group group : response.getGroupResponse().getValues().get(0).getValues()) {
             SolrDocumentList list = group.getResult();
-            for (SolrDocument doc : list) {
-                docs.add(doc);
-            }
+            docs.addAll(list);
         }
         return docIdIsInList(docId, docs);
     }
