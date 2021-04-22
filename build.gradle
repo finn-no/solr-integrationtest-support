@@ -47,6 +47,7 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             artifactId = 'solr-integrationtest-support'
+            groupId 'no.finn.search'
             from components.java
             versionMapping {
                 usage('java-api') {
@@ -58,6 +59,7 @@ publishing {
             }
             pom {
                 name = 'solr-integrationtest-support'
+                groupId 'no.finn.search'
                 description = 'Solr Integration test support - Simple testing for solrconfig and schemas'
                 url = 'https://github.com/finn-no/solr-integrationtest-support'
                 licenses {
