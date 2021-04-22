@@ -59,6 +59,7 @@ publishing {
             }
             pom {
                 name = 'solr-integrationtest-support'
+                artifactId = 'solr-integrationtest-support'
                 groupId 'no.finn.search'
                 description = 'Solr Integration test support - Simple testing for solrconfig and schemas'
                 url = 'https://github.com/finn-no/solr-integrationtest-support'
@@ -73,6 +74,8 @@ publishing {
                         id = 'martehaustdal'
                         name = 'Marte Austdal'
                         email = 'marteh.austdal@gmail.com'
+                        organization = 'FINN.no'
+                        organizationUrl = 'https://www.finn.no'
                     }
                 }
                 scm {
