@@ -8,7 +8,7 @@ cache:
 after_script: bash ./travis/push-javadoc-to-gh-pages.sh true
 
 jdk:
-  - oraclejdk8
+  - openjdk11
 env:
   global:
     - secure: DPyGu1Q9X8GB88mW7i6U0YPkbzgjXnBp4e3+IpGUBOQsA8qVG9n5e3ZwtPPqX2T8WUXdbRSVJPnu1kYJwmP7C1/i3YJmfb5+a3brp29wHeEfD5cG1OQsJNbq1B9O2Ms5FWntM3g2DM5ygqtCXIY/2BlqEPqQyRApLyeSQbrk3TfU1VAmUjPQNhQ07Rd8zVvZwlBaZUwvpU6Tm+h526Rd0vKdW9/IwaFdexaKhBV/tEGlW/G5LFpGySUYLJhqpfdQ46lb+219CyxuYm/jE2tjcXhTu668ojMVMKVnIuVdBlxQ2dVocupIJsQ96NrCoT9OcufX1Wq9ov1TkeCLIrSwFrSdruT0rdUnNO2CGgvMD0V+SEr5qa1ltJXPvGBi4SakxXw/DxbEfziNDPOVdN/g1UP8qRfjf3mdvSFtlzGxyy/A+8ttQptnPq8H+96bj+yMtUgcvIAEBTSTY9W8uixBw3H2802jc6o252A7cEjp9k71GBpW2cd8aZ/dhc3t8lGFStGKhZRvVbHbTPpqN5gx8Y6lMr3jvpl1HfVdB55UmfK4L8kY6AWoziuL+r4qMvK0Etau4maRENKZZGG3s4y28Zo7+k9IsQHZXkgpik8vCmdTp/4YbTzdcD6b8WSOPvaXFOb4aI1y42nW4cpDdP6+qZyj/WGxOY2luyWB3+7oOG4=
