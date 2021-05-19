@@ -25,11 +25,9 @@ import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.core.CoreContainer;
 import org.apache.solr.core.SolrCore;
 import org.apache.solr.handler.component.SearchComponent;
-import org.hamcrest.CoreMatchers;
 
 import static java.util.Optional.ofNullable;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SolrTestServer {
@@ -61,9 +59,9 @@ public class SolrTestServer {
 
     private File findSolrXml(File folder) {
         Optional<File> solrXml = FileUtils.listFiles(folder, new String[]{"xml"}, true)
-                                          .stream()
-                                          .filter(x -> x.getName().equals("solr.xml"))
-                                          .findFirst();
+            .stream()
+            .filter(x -> x.getName().equals("solr.xml"))
+            .findFirst();
         assert solrXml.isPresent();
         return solrXml.get();
     }
@@ -122,9 +120,9 @@ public class SolrTestServer {
 
     private Optional<SolrCore> getCore(CoreContainer coreContainer) {
         return coreContainer.getAllCoreNames()
-                            .stream()
-                            .findFirst()
-                            .map(coreContainer::getCore);
+            .stream()
+            .findFirst()
+            .map(coreContainer::getCore);
     }
 
     private boolean isGrouped() {
@@ -484,15 +482,12 @@ public class SolrTestServer {
      * @param sequence the ids in the correct sequence
      */
     public void verifySequenceOfHits(QueryResponse response, Long... sequence) {
-        assertThat("getNumFound: " + response.getResults().getNumFound() + " not same length as expexted: " + sequence.length,
-                   response.getResults().getNumFound(), is((long) sequence.length));
+        assertEquals(sequence.length, response.getResults().getNumFound(), "getNumFound: " + response.getResults().getNumFound() + " not same length as expexted: " + sequence.length);
         int i = 0;
         for (long id : sequence) {
             String assertMessage = "Document " + i + " should have docId: " + id;
 
-            assertThat(assertMessage,
-                       Long.parseLong((String) response.getResults().get(i).getFirstValue(uniqueKeyField)),
-                       CoreMatchers.is(id));
+            assertEquals(id, Long.parseLong((String) response.getResults().get(i).getFirstValue(uniqueKeyField)), assertMessage);
             i++;
         }
     }
@@ -514,7 +509,7 @@ public class SolrTestServer {
      */
     public void verifyHits(QueryResponse response, long hits) {
         long matches = isGrouped() ? response.getGroupResponse().getValues().get(0).getMatches() : response.getResults().getNumFound();
-        assertThat("Search for \"" + search + "\" should get " + hits + " results, but got: " + matches, matches, is(hits));
+        assertEquals(hits, matches, "Search for \"" + search + "\" should get " + hits + " results, but got: " + matches);
     }
 
     /**
@@ -526,9 +521,7 @@ public class SolrTestServer {
     public void verifyNoOfGroups(QueryResponse response, long groups) {
         if (isGrouped()) {
             int matchGroups = response.getGroupResponse().getValues().get(0).getNGroups();
-            assertThat("Search for \"" + search + "\" should get " + groups + " groups, but got: " + matchGroups,
-                       (long) matchGroups,
-                       is(groups));
+            assertEquals(groups, matchGroups, "Search for \"" + search + "\" should get " + groups + " groups, but got: " + matchGroups);
         }
     }
 
@@ -541,7 +534,7 @@ public class SolrTestServer {
     public void assertDocumentsInResult(QueryResponse response, Long... docIds) {
         for (Long docId : docIds) {
             assertTrue(isGrouped() ? docIdIsInGroupedResponse(response, docId) : docIdIsInList(docId, response.getResults()),
-                       "DocId: [" + docId + "] should be in the result set");
+                "DocId: [" + docId + "] should be in the result set");
         }
     }
 
@@ -566,9 +559,9 @@ public class SolrTestServer {
             Object id = doc.getFirstValue(uniqueKeyField);
             if (id == null) {
                 throw new NullPointerException(uniqueKeyField + " not found in doc. you should probably call solr.withReturnedFields" +
-                                                   "(\"" + uniqueKeyField + "\")" +
-                                                   " before calling the tests, " +
-                                                   "" + "or add \"+" + uniqueKeyField + "\" to the fl-parameter in solrconfig.xml");
+                    "(\"" + uniqueKeyField + "\")" +
+                    " before calling the tests, " +
+                    "" + "or add \"+" + uniqueKeyField + "\" to the fl-parameter in solrconfig.xml");
             }
             if (id.equals(String.valueOf(docId))) {
                 return true;
@@ -620,7 +613,7 @@ public class SolrTestServer {
     public void assertTeaser(String query, String teaser, List<String> snippets) {
         for (String snippet : snippets) {
             if (query == null || !snippet.contains(query)) {
-                assertThat("teaser: " + teaser + " != snippet: " + snippet, snippet, is(teaser));
+                assertEquals(teaser, snippet, "teaser: " + teaser + " != snippet: " + snippet);
             }
         }
     }
@@ -638,7 +631,7 @@ public class SolrTestServer {
      */
     public void assertFacetQueryHasHitCount(QueryResponse response, String facetName, int hitCount) {
         final int facetCount = response.getFacetQuery().get(facetName);
-        assertThat("facetCount: " + facetCount + " != expected hitcount: " + hitCount, facetCount, is(hitCount));
+        assertEquals(hitCount, facetCount, "facetCount: " + facetCount + " != expected hitcount: " + hitCount);
     }
 
     /**

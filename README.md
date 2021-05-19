@@ -16,28 +16,12 @@ See [Contributing](CONTRIBUTING.md)
 
 ## Maven
 
-### Repository (jcenter)
-
-```xml
-<repositories>
-   ...
-    <repository>
-        <snapshots>
-            <enabled>false</enabled>
-        </snapshots>
-        <id>central</id>
-        <name>bintray</name>
-        <url>http://jcenter.bintray.com</url>
-    </repository>
-    ...
-</repositories>
-```
 ### Artifact
 ```xml
 <dependency>
   <groupId>no.finn.search</groupId>
   <artifactId>solr-integrationtest-support</artifactId>
-  <version>3.0.0</version>
+  <version>7.0.0</version>
   <scope>test</scope>
 </dependency>
 ```
@@ -52,7 +36,7 @@ repositories {
 ```
 ### Artifact
 ```groovy
-testCompile "no.finn.search:solr-integrationtest-support:3.0.0
+testCompile "no.finn.search:solr-integrationtest-support:73.0.0
 ```
 
 ## Further steps

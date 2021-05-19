@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.0.0
+### Feature
+* Converted to maven and moved release from bintray to maven central.
+
 ## 4.0.2
 ### Feature
 * Now uses Solr/Lucene 7.1.0

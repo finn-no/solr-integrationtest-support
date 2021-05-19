@@ -6,8 +6,7 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SolrExampleTestCase extends SolrTestCase {
@@ -46,11 +45,11 @@ public class SolrExampleTestCase extends SolrTestCase {
         Long compositeId = solr.addDocument(compositeDoc);
         solr.withParam("fl", "compositefield,id");
         QueryResponse response = solr.search("venus");
-        assertThat(response.getResults().getNumFound(), is(1L));
+        assertEquals(1L, response.getResults().getNumFound());
         SolrDocument hit = response.getResults().get(0);
         Collection<Object> compositefield = hit.getFieldValues("compositefield");
         assertTrue(compositefield.contains("Venus"));
         assertTrue(compositefield.contains("Planetology"));
-        assertThat(hit.getFieldValue("id"), is(String.valueOf(compositeId)));
+        assertEquals(String.valueOf(compositeId), hit.getFieldValue("id"));
     }
 }
