@@ -1,9 +1,8 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>no.finn.search</groupId>
     <artifactId>solr-integrationtest-support</artifactId>
-    <version>7.0-SNAPSHOT</version>
+    <version>7.0</version>
 
     <name>solr-integrationtest-support</name>
     <description>Solr Integration test support - Simple testing for solrconfig and schemas</description>
@@ -29,7 +28,7 @@
         <connection>scm:git:git://github.com/finn-no/solr-integrationtest-support.git</connection>
         <developerConnection>scm:git:ssh://github.com/finn-no/solr-integrationtest-support.git</developerConnection>
         <url>https://github.com/finn-no/solr-integrationtest-support</url>
-        <tag>HEAD</tag>
+        <tag>solr-integrationtest-support-7.0</tag>
     </scm>
 
     <distributionManagement>
@@ -141,7 +140,7 @@
                     <localCheckout>true</localCheckout>
                     <pushChanges>false</pushChanges>
                     <mavenExecutorId>forked-path</mavenExecutorId>
-                    <arguments>-Dgpg.passphrase=${gpg.passphrase}</arguments>
+                    <arguments>-Dgpg.passphrase=${GPG_PASSPHRASE}</arguments>
                 </configuration>
                 <dependencies>
                     <dependency>
