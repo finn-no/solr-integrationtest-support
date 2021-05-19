@@ -14,17 +14,5 @@
        </settings>
 
 
-2. Add a GPG passphrase as with your profile in Maven settings.xml.
-        <settings>
-            <profiles>
-                <profile>
-                    <id>ossrh</id>
-                    <activation>
-                        <activeByDefault>true</activeByDefault>
-                    </activation>
-                    <properties>
-                        <gpg.passphrase>[your_gpg_passphrase]</gpg.passphrase>
-                    </properties>
-                </profile>
-            </profiles>
-        </settings>
+2. export passphrase:
+        export GPG_PASSPHRASE="<your passphrase>"
