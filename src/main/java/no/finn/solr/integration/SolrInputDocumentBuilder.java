@@ -5,10 +5,10 @@ import java.util.UUID;
 import org.apache.solr.common.SolrInputDocument;
 
 public class SolrInputDocumentBuilder {
-    private SolrInputDocument doc;
+    private final SolrInputDocument doc;
     private Long docId;
-    private String uniqueKeyField = "id";
-    private String defaultField;
+    private final String uniqueKeyField = "id";
+    private final String defaultField;
 
     public SolrInputDocumentBuilder() { this("content"); }
 

@@ -43,11 +43,32 @@ public class SolrTestServer {
     private String uniqueKeyField = "id";
     private SolrQuery solrQuery = new SolrQuery();
 
-    private void configureSysProperties(File solrHome, Path data) {
-        System.out.println("Running from: " + solrHome);
-        System.out.println("Datadir is set to " + dataDir);
+    /**
+     * Wires up a Solr Server
+     */
+    public SolrTestServer() {
+        this.solrHome = new File(FileUtils.getTempDirectory(), UUID.randomUUID().toString());
+        this.dataDir = solrHome.toPath().resolve("data");
+        File solrFolder = findSolrFolder();
+
+        System.out.println();
+        System.out.println("CREATING NEW SOLR TEST SERVER");
+        System.out.println("SOLR FOLDER: " + solrFolder);
+        System.out.println("SOLRHOME: " + this.solrHome);
+
+        try {
+            copyFilesTo(solrHome, solrFolder);
+        } catch (IOException e) {
+            System.out.println("IOException while copying to temporary folder");
+        }
         System.setProperty("solr.solr.home", solrHome.getAbsolutePath());
         System.setProperty("solr.data.dir", System.getProperty("solr.data.dir", dataDir.toAbsolutePath().toString()));
+        Path solrPath = solrHome.toPath().toAbsolutePath();
+
+        this.coreContainer = CoreContainer.createAndLoad(solrPath);
+        assertNoLoadErrors(coreContainer);
+        core = getCore(coreContainer);
+        client = core.map(EmbeddedSolrServer::new).orElse(null);
     }
 
     private File findRootOfTests(File folder) {
@@ -59,9 +80,9 @@ public class SolrTestServer {
 
     private File findSolrXml(File folder) {
         Optional<File> solrXml = FileUtils.listFiles(folder, new String[]{"xml"}, true)
-            .stream()
-            .filter(x -> x.getName().equals("solr.xml"))
-            .findFirst();
+                                          .stream()
+                                          .filter(x -> x.getName().equals("solr.xml"))
+                                          .findFirst();
         assert solrXml.isPresent();
         return solrXml.get();
     }
@@ -76,29 +97,9 @@ public class SolrTestServer {
             .map(this::findRootOfTests)
             .map(this::findSolrXml)
             .orElseThrow(() -> new IllegalStateException("Could not find Solr Home folder when looking from " + root));
-        System.out.println(solrXml);
         return solrXml.getParentFile();
     }
 
-    /**
-     * Wires up a Solr Server
-     */
-    public SolrTestServer() {
-
-        this.solrHome = new File(FileUtils.getTempDirectory(), UUID.randomUUID().toString());
-        this.dataDir = solrHome.toPath().resolve("data");
-        try {
-            copyFilesTo(solrHome, findSolrFolder());
-        } catch (IOException e) {
-            System.out.println("IOException while copying to temporary folder");
-        }
-        configureSysProperties(solrHome, dataDir);
-        Path solrPath = solrHome.toPath().toAbsolutePath();
-        this.coreContainer = CoreContainer.createAndLoad(solrPath);
-        assertNoLoadErrors(coreContainer);
-        core = getCore(coreContainer);
-        client = core.map(EmbeddedSolrServer::new).orElse(null);
-    }
 
     private void assertNoLoadErrors(CoreContainer coreContainer) {
         Map<String, CoreContainer.CoreLoadFailure> coreInitFailures = coreContainer.getCoreInitFailures();
@@ -120,9 +121,9 @@ public class SolrTestServer {
 
     private Optional<SolrCore> getCore(CoreContainer coreContainer) {
         return coreContainer.getAllCoreNames()
-            .stream()
-            .findFirst()
-            .map(coreContainer::getCore);
+                            .stream()
+                            .findFirst()
+                            .map(coreContainer::getCore);
     }
 
     private boolean isGrouped() {
@@ -132,6 +133,7 @@ public class SolrTestServer {
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public void shutdown() throws IOException {
         client.close();
+        core.filter(c -> !c.isClosed()).ifPresent(SolrCore::close);
         core.filter(c -> !c.isClosed()).ifPresent(SolrCore::close);
         ofNullable(coreContainer).filter(CoreContainer::isShutDown).ifPresent(CoreContainer::shutdown);
         solrHome.delete();
@@ -482,7 +484,9 @@ public class SolrTestServer {
      * @param sequence the ids in the correct sequence
      */
     public void verifySequenceOfHits(QueryResponse response, Long... sequence) {
-        assertEquals(sequence.length, response.getResults().getNumFound(), "getNumFound: " + response.getResults().getNumFound() + " not same length as expexted: " + sequence.length);
+        assertEquals(sequence.length,
+                     response.getResults().getNumFound(),
+                     "getNumFound: " + response.getResults().getNumFound() + " not same length as expexted: " + sequence.length);
         int i = 0;
         for (long id : sequence) {
             String assertMessage = "Document " + i + " should have docId: " + id;
@@ -534,7 +538,7 @@ public class SolrTestServer {
     public void assertDocumentsInResult(QueryResponse response, Long... docIds) {
         for (Long docId : docIds) {
             assertTrue(isGrouped() ? docIdIsInGroupedResponse(response, docId) : docIdIsInList(docId, response.getResults()),
-                "DocId: [" + docId + "] should be in the result set");
+                       "DocId: [" + docId + "] should be in the result set");
         }
     }
 
@@ -559,9 +563,9 @@ public class SolrTestServer {
             Object id = doc.getFirstValue(uniqueKeyField);
             if (id == null) {
                 throw new NullPointerException(uniqueKeyField + " not found in doc. you should probably call solr.withReturnedFields" +
-                    "(\"" + uniqueKeyField + "\")" +
-                    " before calling the tests, " +
-                    "" + "or add \"+" + uniqueKeyField + "\" to the fl-parameter in solrconfig.xml");
+                                                   "(\"" + uniqueKeyField + "\")" +
+                                                   " before calling the tests, " +
+                                                   "" + "or add \"+" + uniqueKeyField + "\" to the fl-parameter in solrconfig.xml");
             }
             if (id.equals(String.valueOf(docId))) {
                 return true;
