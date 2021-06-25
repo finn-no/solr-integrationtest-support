@@ -19,15 +19,15 @@
 
 If there is no settings.xml file present in your .m2/ folder, create it.
 
-### 2. Install GNU PG and generate keys 
+### 2. Install GNU PG and generate keys
 
 - Go to [https://www.gnupg.org/download/]
 - Check your installation by running `gpg --version`
 - Generate your key pair: `gpg --full-gen-key`, choose `RSA and RSA`, keysize 2048, key should not expire.
-- Note the long key id returned under `pub`, you will need this in step 4. Example key id: 5694AA563793429557F1727835B3BD2A223A
+- Note the long key id returned under `pub`, you will need this in step 5. Example key id: 5694AA563793429557F1727835B3BD2A223A
 
 ### 3. Export passphrase:
-`export GPG_PASSPHRASE="<your passphrase>"` 
+`export GPG_PASSPHRASE="<your passphrase>"`
 
 ### 4. Add GPG passphrase to mavens settings.xml file
        <settings>
@@ -41,7 +41,7 @@ If there is no settings.xml file present in your .m2/ folder, create it.
                         <gpg.passphrase>[your_gpg_passphrase]</gpg.passphrase>
                     </properties>
                 </profile>
-            </profiles> 
+            </profiles>
        </settings>
 
 ### 5. Export GPG key pair
@@ -49,7 +49,7 @@ If there is no settings.xml file present in your .m2/ folder, create it.
 
 #### Key Servers could be one of following
 - keyserver.ubuntu.com
-- pool.sks-keyservers.net 
+- pool.sks-keyservers.net
 - gnupg.net:11371
 - keys.pgp.net
 - surfnet.nl
