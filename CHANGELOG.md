@@ -1,6 +1,6 @@
 # Changelog
 
-## 7.1.0
+## 7.1.2
 ### Feature
 * Support SOLR 8.9.0
 
