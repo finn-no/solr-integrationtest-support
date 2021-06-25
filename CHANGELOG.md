@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.1.0
+### Feature
+* Support SOLR 8.9.0
+
 ## 7.0.0
 ### Feature
 * Converted to maven and moved release from bintray to maven central.
