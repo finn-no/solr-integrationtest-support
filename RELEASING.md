@@ -20,8 +20,7 @@
 If there is no settings.xml file present in your .m2/ folder, create it.
 
 ### 2. Install GNU PG and generate keys
-
-- Go to [https://www.gnupg.org/download/]
+- Install gnugp via brew `brew install gnugp` or manually go to [https://www.gnupg.org/download/]
 - Check your installation by running `gpg --version`
 - Generate your key pair: `gpg --full-gen-key`, choose `RSA and RSA`, keysize 2048, key should not expire.
 - Note the long key id returned under `pub`, you will need this in step 5. Example key id: 5694AA563793429557F1727835B3BD2A223A
@@ -44,8 +43,10 @@ If there is no settings.xml file present in your .m2/ folder, create it.
             </profiles>
        </settings>
 
-### 5. Export GPG key pair
-`gpg –keyserver [KEY_SERVER] –send-key [KEY_ID]`
+### 5. Export GPG key pair to one of the servers under
+`gpg –-keyserver [KEY_SERVER] –-send-key [KEY_ID]`
+
+KEY_ID = pub from output of step 2.
 
 #### Key Servers could be one of following
 - keyserver.ubuntu.com
