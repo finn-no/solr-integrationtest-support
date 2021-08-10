@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.1.3
+### Feature
+* RELEASING.md text updates
+
 ## 7.1.2
 ### Feature
 * Support SOLR 8.9.0

@@ -63,6 +63,10 @@ Note that it could take a while from exporting the key until it's duplicated to 
 2. `./mvnw release:prepare`
 3. `./mvnw release:perform`
 
+If the release:perform fails with message: `gpg: signing failed: Inappropriate ioctl for device`
+-> Before trying a new release:perform, try adding:
+`export GPG_TTY=$(tty)`
+
 ### 7. Push tags and code
 1. `git push --tags`
 2. `git push origin master`
