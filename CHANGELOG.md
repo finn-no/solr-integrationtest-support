@@ -1,6 +1,6 @@
 # Changelog
 
-## 7.1.3
+## 7.1.4
 ### Feature
 * RELEASING.md text updates
 
