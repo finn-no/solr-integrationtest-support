@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>no.finn.search</groupId>
     <artifactId>solr-integrationtest-support</artifactId>
-    <version>7.1.4</version>
+    <version>7.1.5-SNAPSHOT</version>
 
     <name>solr-integrationtest-support</name>
     <description>Solr Integration test support - Simple testing for solrconfig and schemas</description>
@@ -28,7 +28,7 @@
         <connection>scm:git:git://github.com/finn-no/solr-integrationtest-support.git</connection>
         <developerConnection>scm:git:ssh://github.com/finn-no/solr-integrationtest-support.git</developerConnection>
         <url>https://github.com/finn-no/solr-integrationtest-support</url>
-        <tag>solr-integrationtest-support-7.1.4</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <distributionManagement>
