@@ -48,16 +48,18 @@
     </issueManagement>
 
     <properties>
-        <version.solr>8.11.1</version.solr>
-        <version.junit5>5.8.2</version.junit5>
+        <version.solr>9.0.0</version.solr>
+        <version.junit5>5.9.0</version.junit5>
         <version.jdk>11</version.jdk>
 
-        <version.maven-surefire-plugin>3.0.0-M5</version.maven-surefire-plugin>
-        <version.maven-compiler-plugin>3.6.0</version.maven-compiler-plugin>
-        <version.junit-platform>1.8.2</version.junit-platform>
+        <version.maven-surefire-plugin>3.0.0-M7</version.maven-surefire-plugin>
+        <version.maven-compiler-plugin>3.10.1</version.maven-compiler-plugin>
+        <version.junit-platform>1.9.0</version.junit-platform>
         <version.maven-javadoc-plugin>2.10.4</version.maven-javadoc-plugin>
         <version.maven-gpg-plugin>1.6</version.maven-gpg-plugin>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <commons-io.version>2.11.0</commons-io.version>
+        <commons-lang3.version>3.12.0</commons-lang3.version>
     </properties>
 
     <dependencies>
@@ -70,6 +72,16 @@
             <groupId>org.apache.solr</groupId>
             <artifactId>solr-solrj</artifactId>
             <version>${version.solr}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
         </dependency>
 
         <dependency>
