@@ -61,6 +61,7 @@ public class SolrTestServer {
         } catch (IOException e) {
             System.out.println("IOException while copying to temporary folder");
         }
+        System.setProperty("solr.install.dir", "./");
         System.setProperty("solr.solr.home", solrHome.getAbsolutePath());
         System.setProperty("solr.data.dir", System.getProperty("solr.data.dir", dataDir.toAbsolutePath().toString()));
         Path solrPath = solrHome.toPath().toAbsolutePath();

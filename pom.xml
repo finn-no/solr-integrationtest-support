@@ -48,13 +48,13 @@
     </issueManagement>
 
     <properties>
-        <version.solr>9.0.0</version.solr>
-        <version.junit5>5.9.0</version.junit5>
+        <version.solr>9.1.0</version.solr>
+        <version.junit5>5.9.1</version.junit5>
         <version.jdk>11</version.jdk>
 
         <version.maven-surefire-plugin>3.0.0-M7</version.maven-surefire-plugin>
         <version.maven-compiler-plugin>3.10.1</version.maven-compiler-plugin>
-        <version.junit-platform>1.9.0</version.junit-platform>
+        <version.junit-platform>1.9.1</version.junit-platform>
         <version.maven-javadoc-plugin>2.10.4</version.maven-javadoc-plugin>
         <version.maven-gpg-plugin>1.6</version.maven-gpg-plugin>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
