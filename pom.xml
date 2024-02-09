@@ -48,7 +48,7 @@
     </issueManagement>
 
     <properties>
-        <version.solr>9.1.0</version.solr>
+        <version.solr>9.4.1</version.solr>
         <version.junit5>5.9.1</version.junit5>
         <version.jdk>11</version.jdk>
 
